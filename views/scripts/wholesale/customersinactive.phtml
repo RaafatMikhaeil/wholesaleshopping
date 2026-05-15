@@ -1,0 +1,77 @@
+<!-- BREAD CRUMB NAVIGATOR PANEL -->
+<div class="bread_crumb_module">
+    <div class="bread_crumb">	
+        <ul>
+            <li><a href="/dashboard">Home</a></li>
+            <li><?php echo $this->title; ?></li>
+        </ul>
+    </div><!-- end bread_crumb div -->
+</div><!-- end bread_crumb_module div -->
+<div class="clear"></div>
+<!-- SYSTEM MESSAGES -->
+<?php if (is_array($this->messages) && count($this->messages) > 0) { ?>
+    <div id="messages">
+        <ul>
+            <?php foreach ($this->messages as $message) { ?>
+                <li><?php echo $message; ?></li>
+            <?php } ?>
+        </ul>
+    </div><!-- end messages div -->
+<?php } ?>
+<div class="form_options">
+    [ <a href="/wholesale/customer">Add New Customer</a> ]
+</div>
+<table class="variables_table" width="950" style="margin: 0 auto; border: 1px solid lightgray;">
+    <thead>
+        <tr>
+            <th colspan="9" class="top-header">Inactive Customers</th>
+        </tr>
+        <tr> 
+            <th width="10" class="form-header"></th>
+            <th width="" class="form-header">Name</th>
+            <th width="" class="form-header">Address</th>
+            <th width="" class="form-header">License no</th>
+            <th width="" class="form-header">phone</th>
+            <th width="100" class="form-header">email</th>
+            <th width="" class="form-header">Contact</th>
+            <th width="10" class="form-header"></th>
+            <th width="10" class="form-header"></th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+        $row = 0;
+        $accessSleev = Utility_Functions::canUserAccess("/wholesale/customer");
+        foreach ($this->entries as $entry){ $row++;?>
+            <tr class="row_<?php echo $row % 2; ?>">
+                <td><?= $row ?></td>
+                <td><?php echo $entry['cust_name']; ?></td>
+                <td><?php echo $entry['cust_address'] . ',<br>' . $entry['cust_city'] . ',' . $entry['cust_state'] . ' ' . $entry['cust_zip']; ?></td>
+                <td><?php echo $entry['cust_lic_no']; ?></td>
+                <td><?php echo $entry['cust_phone']; ?></td>
+                <td><?php echo $entry['cust_email']; ?></td>
+                <td><?php echo $entry['cust_contact']; ?></td>
+                <td>
+                    <?php if ($accessSleev) { ?>
+                        <?php if( $entry['cust_status'] == 1) { ?>
+                            <a class="cust_change_status" val="0" rel="<?php echo $entry['cust_id']; ?>" class="deactivate" href="/wholesale/customerstatus/id/<?php echo $entry['cust_id']; ?>/val/0">
+                                    <img src="/images/icons/famfam/delete.png" title="Deactivate Customer" />
+                            </a>
+                        <?php } else { ?>
+                            <a class="cust_change_status" val="1" rel="<?php echo $entry['cust_id']; ?>" class="activate" href="/wholesale/customerstatus/id/<?php echo $entry['cust_id']; ?>/val/1">
+                                    <img src="/images/icons/famfam/add.png" title="Activate Customer" />
+                            </a>
+                        <?php } ?>
+                    <?php } ?>
+                </td>
+                <td>
+                    <?php if ($accessSleev) { ?>
+                        <a href="/wholesale/customer/id/<?php echo $entry['cust_id']; ?>">
+                            <img title="Edit Customer" src="/images/icons/famfam/pencil.png" />
+                        </a>
+                    <?php } ?>
+                </td>
+            </tr>
+        <?php } ?>
+    </tbody>
+</table>

@@ -1,0 +1,70 @@
+<?php if ($this->top == 0) { ?>
+    </table>
+    </div>  
+<?php } ?>
+<?php $header = $this->picklist['header']; ?> 
+    <table class="width_100" style="font-family: sans-serif; margin-top: 15px;">
+    <tr>
+        <td width="20%" >
+            Page <?php echo $this->page; ?> of <?php echo $this->allpages; ?><br>
+        </td>
+        <td width="50%" style="text-align: center;">
+            <b>BNY WHOLESALE</b><br>
+            Tob Lic No. 264280896<br>
+            &nbsp;&nbsp;&nbsp; Tel: 310-988-0222 &nbsp;&nbsp;&nbsp;<br>
+            18536 Roslin Ave, Torrance, CA 90504<br>
+            <font style="font-family: sans-serif; font-size: 16px; font-weight: bold;">I N V O I C E</font>
+        </td>
+        <td width="30%" class="cell_center">
+            <b>Date</b> <br>
+            <?php echo date('m/d/Y', strtotime($header['inv_date'])); ?> <br>
+            <img src="<?php echo Zend_Registry::get("root_path") . "/public/pdf/barcode_" . trim($this->orderNumber) . ".jpg"; ?>"/><br>
+            <?php echo $this->barcode; ?>
+        </td>
+    </tr>
+</table>
+<?php if ($this->top == 1) { ?>    
+    <table class="picking width_100" style="font-family: sans-serif;border: none; border-top: 1px solid black; margin: 0 auto">
+        <tr>
+            <td style=" border-left: none;border-right: none;"><b>Customer ID:<?php echo $header['cust_id']; ?></b></td>
+        </tr>
+        </table>
+    <table class="picking width_100">
+        <tr>
+            <td width="45%"><b>Sold To:</b></td>
+            <td width="45%"><b>Ship To:</b></td>
+        </tr>
+        <tr>
+            <td width="45%">
+                <b><?php echo $header['cust_name']; ?></b><br>
+                <?php echo $header['cust_address']; ?><br>
+                <?php echo $header['cust_city'].','.$header['cust_state'].' '.$header['cust_zip']; ?><br>
+                Tob Lic No.:<?php echo $header['cust_lic_no']; ?>
+            </td>
+            <td width="45%">
+                <b><?php echo $header['cust_name']; ?></b><br>
+                <?php echo $header['cust_address']; ?><br>
+                <?php echo $header['cust_city'].','.$header['cust_state'].' '.$header['cust_zip']; ?><br>
+            </td>
+        </tr>
+    </table>
+    <br>
+<?php } ?>
+<?php if ($header['inv_notes'] != '') { ?>
+    <table class="width_100">
+        <tr>
+            <td width="5%"><b>NOTES:</b></td>
+            <td width="95%"><?php echo $header['inv_notes']; ?></td>
+        </tr>
+    </table>
+<?php } ?>
+<?php if ($this->top == 0) { ?>
+    <table  class="picking width_100" style="font-family: sans-serif;">                        
+        <tr>
+            <th width="40">Qty</th>
+            <th width="120">Item Number</th>
+            <th width="300">Item Desc</th>
+            <th width="40">Price</th>
+            <th width="40">Line Total</th>
+        </tr>
+    <?php } ?>    

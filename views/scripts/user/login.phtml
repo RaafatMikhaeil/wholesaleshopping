@@ -1,0 +1,43 @@
+<script type="text/javascript" src="/js/jquery.1.6.2.js"></script>
+<script type="text/javascript" src="/js/jalerts.js"></script>
+<script type="text/javascript">
+$(document).ready( function() {
+    $("form.show-loader").live("submit", function (e) {
+        jAlert('<img src="/images/ajax-loader.gif"/>', 'Please Wait..');
+        $("#popup_content").css('background-image', 'none');
+        $("#popup_content").html('<div style="text-align:center"><img src="/images/ajax-loader.gif"/></div>');
+    });
+});
+</script>
+<?php if ($this->attempts) { ?>
+    <div class="page_title">Login</div>
+    <!-- SYSTEM MESSAGES -->
+    <?php if (is_array($this->messages) && count($this->messages) > 0) { ?>
+        <div id="messages">
+            <ul>
+                <?php foreach ($this->messages as $message) { ?>
+                    <li><?php echo $message; ?></li>
+                <?php } ?>
+            </ul>
+        </div><!-- end messages div -->
+    <?php } ?>
+        <div class="container">
+            <section id="content">
+                <form enctype="multipart/form-data" method="post" action="/adminbnylogin" class="show-loader">
+                    <h1><img src="/images/atlas_logo.png" width="200"></h1>
+                    <div>
+                        <?php echo $this->form->username; ?>
+                    </div>
+                    <div>
+                        <?php echo $this->form->password; ?>
+                    </div>
+                    <div>
+                        <?php echo $this->form->submit; ?>
+                        <a href="<?php echo Zend_Registry::get('full_url'); ?>/user/forgot">Forgot Password?</a>
+                    </div>
+                </form>
+            </section>
+        </div>
+<?php } else { ?>
+        <div class="error">You have been blocked due to, too many failed login attempts.</div>
+<?php } ?>

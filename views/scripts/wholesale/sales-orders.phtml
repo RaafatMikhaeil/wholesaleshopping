@@ -1,0 +1,75 @@
+<!-- BREAD CRUMB NAVIGATOR PANEL -->
+<div class="bread_crumb_module">
+    <div class="bread_crumb">	
+        <ul>
+            <li><a href="/dashboard">Home</a></li>
+            <li><?php echo $this->title; ?></li>
+        </ul>
+    </div><!-- end bread_crumb div -->
+</div><!-- end bread_crumb_module div -->
+<div class="clear"></div>
+<!-- SYSTEM MESSAGES -->
+<?php if (is_array($this->messages) && count($this->messages) > 0) { ?>
+    <div id="messages">
+        <ul>
+            <?php foreach ($this->messages as $message) { ?>
+                <li><?php echo $message; ?></li>
+            <?php } ?>
+        </ul>
+    </div><!-- end messages div -->
+<?php } ?>
+<div class="form_options">
+    [ <a href="/wholesale/sales-order">Create Sales Order</a> ]
+</div>
+<table class="variables_table" width="1000" style="margin: 0 auto; border: 1px solid lightgray;">
+    <thead>
+        <tr>
+            <th colspan="8" class="top-header">Sales Orders Manager</th>
+        </tr>
+        <tr> 
+            <th width="10" class="form-header">ID</th>
+            <th width="200" class="form-header">Created By</th>
+            <th width="200" class="form-header">Date</th>
+            <th width="200" class="form-header">Notes</th>
+            <th width="100" class="form-header">Total</th>
+            <th width="40" class="form-header"></th>
+            <th width="40" class="form-header"></th>
+            <th width="40" class="form-header"></th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+        $row = 0;
+        $accessSleev = Utility_Functions::canUserAccess("/wholesale/invoiceinfo");
+        foreach ($this->entries as $entry) {    $row++;?>
+            <tr class="row_<?php echo $row % 2; ?>">
+                <td><?php echo $entry['inv_id']; ?></td>
+                
+                <td><?php echo $entry['name']; ?></td>
+                <td><?php echo date('m/d/Y h:i A', strtotime($entry['inv_date'])); ?></td>
+                <td><?php echo strip_tags($entry['inv_notes']); ?></td>
+                <td>$<?php echo round($entry['inv_total'],2); ?></td>
+                <td style="text-align: center;">
+                    <?php if ($accessSleev) { ?>
+                    <a onclick="return confirm('Are you sure you want to delete this sales order?')" href="/wholesale/voidinvoice/id/<?php echo $entry['inv_id']; ?>/location/sales-orders">
+                            <img width="30" title="Delete Sales Order" src="/images/icons/famfam/remove.png" />
+                        </a>
+                    <?php } ?>
+                </td>
+                <td style="text-align: center;">
+                    <?php if ($accessSleev) { ?>
+                        <a href="/wholesale/sales-order/id/<?php echo $entry['inv_id']; ?>">
+                            <img width="30" title="Edit Sales Order" src="/images/icons/famfam/pencil.png" />
+                        </a>
+                    <?php } ?>
+                </td>
+                <td style="text-align: center;">
+                    <?php if ($accessSleev) { ?>
+                        <a onclick="window.open('/wholesale/invoiceinfo/id/<?=$entry['inv_id']?>/act/printso','PrintRequest','width=1000,height=800')" href="javascript:;">
+                            <img width="30" title="Print Sales Order" src="/images/icons/famfam/printer.png" />
+                        </a>
+                    <?php } ?>
+                </td>
+        <?php } ?>
+    </tbody>
+</table>

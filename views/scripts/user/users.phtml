@@ -1,0 +1,86 @@
+<!-- BREAD CRUMB NAVIGATOR PANEL -->
+<div class="bread_crumb_module">
+    <div class="bread_crumb">	
+        <ul>
+            <li><a href="/dashboard">Home</a></li>
+            <li><?php echo $this->title; ?></li>
+        </ul>
+    </div><!-- end bread_crumb div -->
+</div><!-- end bread_crumb_module div -->
+<div class="clear"></div>
+<!-- SYSTEM MESSAGES -->
+<?php if (is_array($this->messages) && count($this->messages) > 0) { ?>
+    <div id="messages">
+        <ul>
+            <?php foreach ($this->messages as $message) { ?>
+                <li><?php echo $message; ?></li>
+            <?php } ?>
+        </ul>
+    </div><!-- end messages div -->
+<?php } ?>
+<div class="table_top_options">
+    <div class="options_section">[ <a href="/user/user">Create New User</a> ]</div>
+    <div class="clear"></div>
+</div><!-- end table_top_options -->
+
+<table class="user_table hideClass" width="840" >
+    <thead>
+        <tr>
+            <th colspan="4" class="top-header">Users Manager</th>
+        </tr>
+        <tr>
+            <th class="form-header" width="150">Name</th>
+            <th class="form-header" width="150">User Name</th>
+            <th class="form-header" width="200">Email</th>
+            <th class="form-header" width="65">Options</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+        $useruser       =   Utility_Functions::canUserAccess("/user/user");
+        $usergroups     =   Utility_Functions::canUserAccess("/user/usergroups");
+        $userreset      =   Utility_Functions::canUserAccess("/user/userreset");
+        $userunlock     =   Utility_Functions::canUserAccess("/user/unlock");
+        $userdeactivate =   Utility_Functions::canUserAccess("/user/userdeactivate");
+        $useractivate   =   Utility_Functions::canUserAccess("/user/useractivate");
+        foreach ($this->users as $user) { ?>
+            <tr id="<?php echo $user['user_id']; ?>">
+                <td><?php echo $user['name']; ?></td>
+                <td><?php echo $user['username']; ?></td>
+                <td><?php echo $user['email']; ?></td>
+                <td>
+                    <?php if ($useruser) { ?>
+                        <a href="/user/user/id/<?php echo $user['user_id']; ?>">
+                            <img title="edit the selected user's information" src="/images/icons/famfam/pencil.png" />
+                        </a>
+                    <?php } ?>
+                    <?php if ($usergroups) { ?>
+                        <a href="/user/usergroups/id/<?php echo $user['user_id']; ?>">
+                            <img title="assign the user's groups" src="/images/icons/famfam/cog.png" />
+                        </a>
+                    <?php } ?>
+                        <?php if ($userreset) { ?>
+                        <a class="u_reset" href="/user/userreset/id/<?php echo $user['user_id']; ?>">
+                            <img title="reset the selected user's password" src="/images/icons/famfam/lock_go.png" />
+                        </a>
+                        <?php } ?>
+                        <?php if ($userunlock) { ?>
+                        <a class="user_unlock" href="/user/unlock/id/<?php echo $user['user_id']; ?>">
+                            <img title="unlock the selected user's account" src="/images/icons/famfam/lock_open.png" />
+                        </a>
+                    <?php } ?>
+                    <?php if ($useractivate) {
+                            $active = $user['is_active'];?>
+                            <a class="u_activate" val="<?php echo $active; ?>" href="<?php echo $user['user_id']; ?>">
+                            <?php if ($active == 0) { ?>
+                                <img title="activate the selected user" src="/images/icons/famfam/add.png" />
+                            <?php } else if ($active == 1) { ?>
+                                <img title="deactivate the selected user" src="/images/icons/famfam/delete.png" />
+                            <?php } ?>
+                            </a>
+                    <?php } ?>
+                </td>
+            </tr>
+        <?php } ?>
+    </tbody>
+</table>

@@ -1,0 +1,215 @@
+<?php 
+if( $this->output == 1 && ( is_array($this->records) && count($this->records) > 0 )) { 
+    $column_headers = array_keys($this->records[0]);
+    foreach ($column_headers as $header) {
+    if (!is_numeric($header)) 
+    echo $header.',';
+    }echo "\n";
+
+    foreach ($this->records as $record) { 
+    foreach ($record as $key => $value) 
+    if (!is_numeric($key)) 
+    if(in_array($key, array('LineTotal','JIIPrice')))
+    echo '$'.str_replace(',',' ',$value).',';
+    else
+    echo str_replace(',',' ',$value).',';
+    echo "\n";
+    }
+} else { ?>
+<script type="text/javascript">
+$(document).ready(function () {
+    $(".open_order").live("click", function (e) {
+        var order_line = $(this).attr('id');
+        $('tr#order_' + order_line).toggle();
+    });
+        
+    $('a.avc_order_reload').live('click', function (e) {
+        var order_file = $(this).attr("rel");
+        var id = $(this).attr("id");
+        $.ajax({
+            url: "/avectous/orderreload",
+            type: "POST",
+            datatype: "html",
+            data: {'order_file': order_file},
+            success: function (result) {
+                if(result){
+                    jAlert(result, 'Error');
+                }else{
+                    jAlert('Order has been reloaded.', 'Success');
+                    $('a#'+id).fadeOut(); 
+                }
+            },error: function (result) {
+                jAlert(result, 'Error');
+            }
+        });
+    });
+});
+</script>
+<!-- BREAD CRUMB NAVIGATOR PANEL -->
+<div class="bread_crumb_module">
+    <div class="bread_crumb">	
+        <ul>
+            <li><a href="/dashboard">Home</a></li>
+            <li><?php echo $this->title; ?></li>
+        </ul>
+    </div><!-- end bread_crumb div -->
+</div><!-- end bread_crumb_module div -->
+<div class="clear"></div>
+<?php if (is_array($this->messages) && count($this->messages) > 0) { ?>
+    <div id="messages">
+        <ul>
+            <?php foreach ($this->messages as $message) { ?>
+                <li><?php echo $message; ?></li>
+            <?php } ?>
+        </ul>
+    </div><!-- end messages div -->
+<?php } ?>
+<div style="margin: 0 auto; width: 980px; text-align: center;">
+    <form method="post">
+        <table id="form" style="margin:0 auto;">
+            <tr>
+                <td colspan=2 class="top-header">Customer Balance Report</td>
+            </tr>
+<!--            <tr>
+                <td class="table-header">Start Date</td>
+                <td class="form-element"><input class="date-element" type="text" name="start_date" value="<?php echo $this->entries['start_date']; ?>" id="start_date" required="required" autocomplete="off"/></td>
+            </tr>
+            <tr>
+                <td class="table-header">End Date</td>
+                <td class="form-element"><input class="date-element" type="text" name="end_date" value="<?php echo $this->entries['end_date']; ?>" id="end_date" required="required" autocomplete="off"/></td>
+            </tr>-->
+            <tr>
+                <td class="table-header">Customer</td>
+                <td class="form-field">
+                    <div class="frmSearch" style="width:405px;">
+                        <input autocomplete="off" type="text" class="search-box" id="search-box_cust" value="<?=$this->entries['cust_data']['cust_name']?>"  style="width:400px;"/>
+                        <div class="suggesstion-box" id="suggesstion-box_cust"></div>
+                    </div>
+                    <input name="cust_id_inv" id="cust_id_inv" value="<?= $this->entries['cust_id_inv'] ?>" type="hidden"/>
+                </td>
+            </tr>
+<!--            <tr>
+                <td class="table-header">Payment Method</td>
+                <td class="form-field">
+                    <select name="pay_type" id="pay_type">
+                        <option value="0">-Select Payment Type-</option>
+                        <?php foreach ($this->pay_types as $prod) { ?>
+                            <option <?php echo ($this->entries['pay_type'] == $prod['payment_type_id']) ? 'selected="selected"' : ''; ?> value="<?= $prod['payment_type_id'] ?>"><?= $prod['payment_type'] ?></option>
+                        <?php } ?>
+                    </select>
+                 </td>
+            </tr>-->
+<!--                 <tr>
+                    <td class="table-header">Report Type</td>
+                    <td class="form-element">
+                        <select name="report_type">
+                            <option value="summary" <?php echo ($this->entries['report_type']=='summary')?'selected="selected"':''?>>Account Summary</option>
+                            <option value="details" <?php echo ($this->entries['report_type']=='details')?'selected="selected"':''?>>Item Details</option>
+                        </select>
+                    </td>
+                </tr>-->
+<!--            <tr>
+                <td class="table-header">Export to Excel</td>
+                <td class="form-element"><input type="checkbox" name="export"/></td>
+            </tr>-->
+            <tr>
+                <td colspan='2' class="form-element" style="text-align: center;">
+                    <input type="submit" name="submit" value="Submit"/>
+                </td>
+            </tr>
+        </table>
+    </form>
+    <?php
+    if (is_array($this->records) && count($this->records) > 0) {
+        $column_headers = array_keys($this->records[0]);
+        $headers = '';
+        $col_count = 0;
+        foreach ($column_headers as $header) {
+            if (!is_numeric($header)) {
+                $col_count++;
+                $headers .= '<td class="table-header">' . $header . '</td>';
+            }
+        }
+        ?>
+        <div class="form_options" style="text-align: center; height: 40px;">
+            [ <a class="printPage" href="#"><img title="Print Report" height="40" src="/images/icons/misc/fileprint.png" /></a> ]
+        </div>
+        <table class='report_table'>
+            <thead>
+                <tr>
+                    <td colspan="<?php echo $col_count; ?>" class="top-header"><?php echo $this->title; ?></td>
+                </tr>
+                <tr>
+                    <?php echo $headers; ?>
+                </tr>
+            </thead>
+            <tbody>
+                <?php 
+                $profit = 0;
+                foreach ($this->records as $record) { 
+                    $cust_id = $record['cust_id'];
+                    $order_data = array_filter($this->details, function ($var) use ($cust_id) {return ($var['inv_cust_id'] == $cust_id); });
+                    ?>
+                    <tr>
+                        <?php
+                        foreach ($record as $key => $value) {
+                            if (!is_numeric($key)){
+                                if(in_array($key, array('CustName')))
+                                    echo '<td class="table-line"><a class="open_order" id="details_'.$cust_id.'" href="javascript:;">'.$value.'</a></td>';
+                                else  
+                                    echo '<td class="table-line">' . $value . '</td>';
+                            }
+                            if (in_array($key, array('PendingAmount')))
+                                $profit += (float) $value;
+                        }
+                        ?>
+                    </tr>
+                        <tr id="order_details_<?=$cust_id?>" style="display:none;">
+                            <td colspan="<?=$col_count?>" style="background-color: floralwhite; text-align: center">
+                                <table style="margin: 0 auto; width: 980px;">
+                                    <?php
+                                        $column_headers1 = array_keys(end($order_data));
+                                        $headers1 = '';
+                                        $col_count1 = 0;
+                                        unset($column_headers1[0]);
+                                        foreach ($column_headers1 as $header1) {
+                                            if (!is_numeric($header1)) {
+                                                $col_count1++;
+                                                $headers1 .= '<td class="table-header">' . strtoupper($header1) . '</td>';
+                                            }
+                                        }
+                                    ?>
+                                    <thead>
+                                        <tr>
+                                            <td class="table-header"></td>
+                                            <?php echo $headers1; ?>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        
+                                            <?php $y = 0; foreach ($order_data as $key1 => $value1) {  $y++; unset($value1['inv_cust_id']);?>
+                                                <tr>
+                                                    <td class="table-line"><?=$y?></td>
+                                                    <?php foreach ($value1 as $key2 => $value2) {
+                                                        if (!is_numeric($key2)) {
+                                                            echo '<td class="table-line">' . $value2 . '</td>';
+                                                        }
+                                                    }?>
+                                                </tr>
+                                                <?php  } ?>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                <?php } ?>
+                    
+                    <tr>
+                        <td colspan="6" style="text-align: right;"><b>Total Pending Payments</b></td>
+                        <td><?='$'.number_format($profit,2)?></td>
+                    </tr>
+            </tbody>
+        </table>
+    <?php } ?>
+</div>
+<?php } ?>

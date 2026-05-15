@@ -1,0 +1,98 @@
+<?php if ($this->top == 0) { ?>
+    </table>
+    </div>  
+<?php } ?>
+<?php $header = $this->picklist['header']; ?> 
+<table class="width_100" style="font-family: sans-serif;">
+    <tr>
+        <td width="30%" >
+            <b>Day Star Distibution</b><br>
+            Phone # 213-265-7472 <br>
+            Fax # 213-265-7473<br>
+            320 E 3RD ST, <br>LOS ANGELES, CA 90013<br>
+        </td>
+        <td width="40%" style="text-align: center;">
+            <img width="240" src="<?php echo Zend_Registry::get("full_url") . "/images/logo_home.png"; ?>"/><br>
+        </td>
+        <td width="30%" style="text-align: right;">
+            <table class="picking cell_center" cellpadding="0" cellspacing="0" style="font-family: sans-serif;">
+                <tr>
+                    <td style="text-align: left; font-size: 12px;">Page <?php echo $this->page; ?> of <?php echo $this->allpages; ?></td>
+                    <td style="text-align: right; font-size: 22px;">Invoice</td>
+                </tr>
+                <tr>
+                    <td>Date</td>
+                    <td>Invoice #</td>
+                </tr>
+                <tr>
+                    <td style="tex"><?php echo date('m/d/Y', strtotime($header['inv_date'])); ?> </td>
+                    <td>
+                        <?php echo $this->barcode; ?><br>
+                        <img src="<?php echo Zend_Registry::get("root_path") . "/public/pdf/barcode_" . trim($this->orderNumber) . ".jpg"; ?>"/>
+                    </td>
+                 </tr>
+                <tr>
+                    <td colspan="2" style="text-align: center; font-size: 12px;padding: 5px 0px;">Tobacco Lic# 222271552</td>
+                </tr>
+                
+            </table>
+        </td>
+    </tr>
+</table>
+<?php if ($this->top == 1) { ?>    
+    <table class="picking width_100">
+        <tr>
+            <td width="45%"><b>Bill To:</b></td>
+            <td width="45%"><b>Ship To:</b></td>
+        </tr>
+        <tr>
+            <td width="45%">
+                <b><?php echo $header['cust_name']; ?></b><br>
+                <?php echo $header['cust_address']; ?><br>
+                <?php echo $header['cust_city'].','.$header['cust_state'].' '.$header['cust_zip']; ?>
+            </td>
+            <td width="45%">
+                <b><?php echo $header['cust_name']; ?></b><br>
+                <?php echo $header['cust_address']; ?><br>
+                <?php echo $header['cust_city'].','.$header['cust_state'].' '.$header['cust_zip']; ?><br>
+            </td>
+        </tr>
+    </table>
+    <table class="picking width_100" style=" text-align: center; font-family: sans-serif;border: none; border-top: 1px solid black; margin: 0 auto">
+        <tr>
+            <td>Sellers Permit#</td>
+            <td>Tobacco Lic#</td>
+            <td>Expiration Date</td>
+            <td>Rep</td>
+            <td>E-mail</td>
+            <td>Web Site</td>
+        </tr>
+        <tr>
+            <td width="14%"></td>
+            <td width="13%"><?php echo $header['cust_lic_no']; ?></td>
+            <td width="15%"><?php echo (!empty(trim($header['cust_lic_exp'])) && $header['cust_lic_exp'] != '0000-00-00')?date('m/d/Y', strtotime($header['cust_lic_exp'])):''; ?></td>
+            <td width="22%"><?php echo $header['cust_contact']; ?></td>
+            <td width="26%"><?php echo $header['cust_email']; ?></td>
+            <td width="10%"></td>
+        </tr>
+        </table>
+    <br>
+<?php } ?>
+<?php if ($header['inv_notes'] != '') { ?>
+    <table class="width_100">
+        <tr>
+            <td width="5%"><b>NOTES:</b></td>
+            <td width="95%"><?php echo $header['inv_notes']; ?></td>
+        </tr>
+    </table>
+<?php } ?>
+<?php if ($this->top == 0) { ?>
+    <table  class="picking width_100" style="font-family: sans-serif;">                        
+        <tr>
+            <th width="40">Qty</th>
+            <th width="120">Item Number</th>
+            <th width="300">Item Desc</th>
+            <th width="40">Price</th>
+            <th width="40">Line Total</th>
+        </tr>
+    <?php } ?>    

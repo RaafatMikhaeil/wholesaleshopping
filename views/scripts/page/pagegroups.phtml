@@ -1,0 +1,71 @@
+<!-- BREAD CRUMB NAVIGATOR PANEL -->
+<div class="bread_crumb_module">
+    <div class="bread_crumb">	
+        <ul>
+            <li><a href="/dashboard">Home</a></li>			
+            <li><?php echo $this->title; ?></li>
+        </ul>
+    </div><!-- end bread_crumb div -->
+</div><!-- end bread_crumb_module div -->
+<div class="clear"></div>
+
+<!-- SYSTEM MESSAGES -->
+<?php if (is_array($this->messages) && count($this->messages) > 0) { ?>
+    <div id="messages">
+        <ul>
+            <?php foreach ($this->messages as $message) { ?>
+                <li><?php echo $message; ?></li>
+            <?php } ?>
+        </ul>
+    </div><!-- end messages div -->
+<?php } ?>
+
+<!-- PAGE GROUP LIST -->
+<div class="table_top_options">
+<div class="options_section">[ <a href="/page/pagegroup">Create New Page Group</a> ]</div>
+<div class="clear"></div
+</div>
+
+<table class="page_table">
+    <thead>
+        <tr>
+            <th colspan=7 class="top-header">Page Group Manager</th>
+        </tr>
+        <tr>
+            <th width="25" class="form-header">ID</th>
+            <th width="200" class="form-header">Group Name</th>
+            <th width="200" class="form-header">Default Page</th>
+            <th width="200" class="form-header">Path</th>
+            <th width="50" class="form-header">Image</th>
+            <th width="50" class="form-header">Active</th>
+            <th width="50" class="form-header">Options</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+        $row = 0;
+        $accessPagegroup = Utility_Functions::canUserAccess("/page/pagegroup");
+        foreach ($this->page_groups as $page_group) {
+            ?>
+            <tr class="row_<?php echo $row % 2; ?>" id="<?php echo $page_group['page_group_id']; ?>">
+                <td><?php echo $page_group['page_group_id']; ?></td>
+                <td><?php echo $page_group['page_group_name']; ?></td>
+                <td><?php echo $page_group['page_name']; ?></td>
+                <td><?php echo $page_group['path']; ?></td>
+                <td style="text-align: center;">
+                    <img src="/uploads/orders/icons/<?php echo (trim($page_group['image']) == "") ? "default.png" : $page_group['image']; ?>" height="16" width="16" />
+                </td>
+                <td><?php echo ( $page_group['group_active'] == 1 ) ? "Active" : "Inactive"; ?></td>
+                <td style="text-align: center;">
+                    <?php if ($accessPagegroup) { ?>
+                        <a href="/page/pagegroup/id/<?php echo $page_group['page_group_id']; ?>">
+                            <img src="/images/icons/famfam/pencil.png" title="modify the selected page group" />
+                        </a>
+                    <?php } ?>
+                </td>
+            </tr>
+            <?php ++$row; ?>
+        <?php } ?>
+    </tbody>
+</table><!-- end task_table -->
+</div><!-- end page_groups div -->

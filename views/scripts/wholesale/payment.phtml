@@ -1,0 +1,104 @@
+    <!-- BREAD CRUMB NAVIGATOR PANEL -->
+    <?php if($this->src == "html"){ ?>
+        <div class="bread_crumb_module">
+            <div class="bread_crumb">	
+                <ul>
+                    <li><a href="/dashboard">Home</a></li>
+                    <li><?php echo $this->title; ?></li>
+                </ul>
+            </div><!-- end bread_crumb div -->
+        </div><!-- end bread_crumb_module div -->
+        <div class="clear"></div>
+    <?php } ?>
+        
+    <!-- SYSTEM MESSAGES -->
+    <?php if (is_array($this->messages) && count($this->messages) > 0) { ?>
+        <div id="messages">
+            <ul>
+                <?php foreach ($this->messages as $message) { ?>
+                    <li><?php echo $message; ?></li>
+                <?php } ?>
+            </ul>
+        </div><!-- end messages div -->
+    <?php } ?>
+        
+    <!-- FORM OPTIONS -->
+    <?php if($this->src == "html"){ ?>
+        <div class="form_options">
+            <?php if($this->inv_id){ ?>
+                [ <a href="/wholesale/invoice/id/<?= $this->inv_id ?>">Back to Invoice</a> ]
+            <?php } ?>
+            [ <a href="/wholesale/pending-invoices">Invoices List</a> ]
+            [ <a href="/wholesale/payments">Payments List</a> ]
+        </div>
+    <?php } ?>
+    
+    <form method="post" action="" id="payment_form" class="form_submit show-loader">
+    <?php echo $this->form->payment_id; ?>
+    <table id="form" width="600">
+        <tr>
+            <td colspan=2 class="top-header">Payment Manager</td>
+        </tr>
+        <tr>
+            <td class="form-header">Invoice</td>
+            <td class="form-field"><?php echo $this->form->inv_id; ?></td>
+        </tr>
+        <?php if($this->inv_id){ ?>
+            <tr>
+                <td class="form-header">Invoice Total</td>
+                <td class="form-field">$<?php echo $this->inv_total; ?></td>            
+            </tr>
+            <tr>
+                <td class="form-header">Total Payments</td>
+                <td class="form-field">$<?php echo $this->payments; ?></td>            
+            </tr>
+            <tr>
+                <td class="form-header">Remaining Amount</td>
+                <td class="form-field">$<?php echo $this->inv_total-$this->payments; ?></td>            
+            </tr>        
+        <?php } ?>
+        <tr>
+            <td class="form-header">Payment Method</td>
+            <td class="form-field"><?php echo $this->form->payment_type_id; ?></td>
+        </tr>
+        <tr>
+            <td class="form-header" width="220">Payment Date</td>
+            <td class="form-field">
+                <?php
+                $lic_date = $this->form->payment_datetime->getValue();
+                if ($lic_date != '' && $lic_date != '0000-00-00') {
+                    $value = date('m/d/Y', strtotime($lic_date));
+                    echo $this->form->payment_datetime->setValue($value);
+                } else {
+                    echo $this->form->payment_datetime->setValue(date('m/d/Y'));
+                }
+                ?>
+            </td>
+        </tr>
+        <tr>
+            <td class="form-header">Payment Amount</td>
+            <td class="form-field">
+                <?php
+                if((int)$this->form->payment_id->getValue() > 0){
+                    $payment_amount = $this->form->payment_amount->getValue();
+                }else{
+                    $payment_amount = $this->inv_total-$this->payments;
+                }?>
+                <input type="number" required="required" class="form-element" name="payment_amount" 
+                       value="<?= $payment_amount ?>" 
+                       step="any" id="payment_amount" size="4"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form-header">Payment Reference</td>
+            <td class="form-field"><?php echo $this->form->payment_contact; ?></td>
+        </tr>
+        <tr>
+            <td colspan=2 class="form-submit">
+                <?php echo $this->form->submit; ?>
+                <?php echo $this->form->print; ?>
+                <input type="hidden" name="button_clicked" value="" />
+            </td>
+        </tr>
+    </table>
+</form>

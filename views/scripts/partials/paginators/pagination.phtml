@@ -1,0 +1,33 @@
+
+<?php if( $this->pageCount ) { ?>
+	<?php
+		$url = ( count(explode("/", $this->url())) <= 2 ) ? $this->url()."/index" : $this->url();
+		$url = preg_replace("/\/page\/[0-9]+/", "", $url);
+		$url = preg_replace("/\/[a-z]+_page\/[0-9]+/", "", $url);
+		$url = preg_replace("/\#/", "", $url);
+	?> 
+    <div class="pagination_module">
+        <!-- Previous page link --> 
+        <?php if( isset($this->previous) ) { ?>
+        	<a class="enabled" href="<?php echo $url."/page/".$this->previous; ?>">&lt; Previous</a> |
+        <?php } else { ?> 
+            <a class="disabled" href="#">&lt; Previous</a> |
+        <?php } ?> 
+        
+        <!-- Numbered page links -->
+        <?php foreach( $this->pagesInRange as $page ) { ?> 
+            <?php if( $page != $this->current ) { ?>
+                <a class="enabled" href="<?php echo $url."/page/".$page; ?>"><?php echo $page; ?></a> |
+            <?php } else { ?>
+            	<a class="active" href="#"><?php echo $page; ?></a> |
+            <?php } ?>
+        <?php } ?>
+        
+        <!-- Next page link --> 
+        <?php if( isset($this->next) ) { ?> 
+        	<a class="enabled" href="<?php echo $url."/page/".$this->next; ?>">Next &gt;</a>
+        <?php } else { ?> 
+        	<a class="disabled" href="#">Next &gt;</a>
+        <?php } ?> 
+    </div> <!-- end pagination_module div -->
+<?php } ?>

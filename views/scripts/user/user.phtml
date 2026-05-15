@@ -1,0 +1,58 @@
+<!-- BREAD CRUMB NAVIGATOR PANEL -->
+<div class="bread_crumb_module">
+	<div class="bread_crumb">	
+		<ul>
+			<li><a href="/dashboard">Home</a></li>
+            <li><a href="/user/users">User List</a></li>
+			<li><?php echo $this->title; ?></li>
+		</ul>
+	</div><!-- end bread_crumb div -->
+</div><!-- end bread_crumb_module div -->
+<div class="clear"></div>
+
+<!-- SYSTEM MESSAGES -->
+<?php if( is_array($this->messages) && count($this->messages) > 0 ) { ?>
+	<div id="messages">
+		<ul>
+		<?php foreach( $this->messages as $message ) { ?>
+			<li><?php echo $message; ?></li>
+		<?php } ?>
+		</ul>
+	</div><!-- end messages div -->
+<?php } ?>
+
+<form enctype="multipart/form-data" method="post" action="">
+	<?php echo $this->form->user_id; ?>
+	<table id="form">
+    	<tr>
+        	<td colspan=2 class="top-header">User Manager</td>
+        </tr>
+		<tr>
+        	<td class="form-header">Full Name</td>
+            <td class="form-field"><?php echo $this->form->name; ?></td>
+        </tr>
+		<tr>
+        	<td class="form-header">Username</td>
+            <td class="form-field"><?php echo $this->form->username; ?></td>
+        </tr>
+		<tr>
+        	<td class="form-header">Email Address</td>
+            <td class="form-field"><?php echo $this->form->email; ?></td>
+        </tr>
+		<tr>
+        	<td class="form-header">Admin User</td>
+            <td class="form-field"><?php echo $this->form->is_admin; ?></td>
+        </tr>
+		<tr>
+        	<td class="form-header">Status</td>
+            <td class="form-field"><?php echo $this->form->is_active; ?></td>
+        </tr>
+        <tr>
+            <td class="form-header">Customer</td>
+            <td class="form-field"><?php echo $this->form->cust_id; ?></td>
+        </tr>
+        <tr>
+        	<td colspan=2 class="form-submit"><?php echo $this->form->submit; ?></td>
+        </tr>
+	</table>
+</form>

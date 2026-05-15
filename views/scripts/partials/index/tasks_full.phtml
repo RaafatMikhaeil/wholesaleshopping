@@ -1,0 +1,101 @@
+<!-- BREAD CRUMB NAVIGATOR PANEL -->
+<div class="bread_crumb_module">
+	<div class="bread_crumb">	
+		<ul>
+			<li><a href="/dashboard">Home</a></li>			
+			<li><?php echo $this->title; ?></li>
+		</ul>
+	</div><!-- end bread_crumb div -->
+</div><!-- end bread_crumb_module div -->
+<div class="clear"></div>
+
+<!-- SYSTEM MESSAGES -->
+<?php if( is_array($this->messages) && count($this->messages) > 0 ) { ?>
+	<div id="messages">
+		<ul>
+		<?php foreach( $this->messages as $message ) { ?>
+			<li><?php echo $message; ?></li>
+		<?php } ?>
+		</ul>
+	</div><!-- end messages div -->
+<?php } ?>
+
+<!-- SYSTEM NOTIFICATIONS -->
+<?php if( count($this->notifications) > 0 ) { ?>
+    <div class="notification_module">
+        <div class="content_header">
+            My Notifications
+        </div><!-- end content-header div -->
+        
+        <?php foreach( $this->notifications as $notification ) { ?>
+        <div class="notification_<?php echo $notification['notification_id']; ?>">
+            <div class="notification_header">
+                <table width="100%" cellspacing=0 cellpadding=0>
+                    <tr>
+                        <td>
+                            <?php echo date("m/d/Y h:i:s A", strtotime($notification['timestamp']))." by ".$notification['name']; ?>
+                        </td>
+                        <td width="25">
+                            <a class="delete" id="<?php echo $notification['notification_id']; ?>" 
+                                href="/notifications/notificationdelete/id/<?php echo $notification['notification_id']; ?>">
+                                <img src="/images/icons/famfam/delete.png" title="delete this notification" />
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+            </div><!-- end notification_header div -->
+            <div class="notification_content">
+                <?php echo $notification['message']; ?>
+            </div><!-- end notification_content div -->
+        </div><!-- end notification_ID div -->
+        <?php } ?>
+    </div><!-- end notification_module div -->
+<div class="header_bar"></div>
+<?php } ?>
+<!-- USER APPLICATION NAVIGATION -->
+<div class="dashboard_module">
+    <div class="content_header">My Applications</div>
+
+    <?php if( is_array($this->page_groups) ) { ?>
+        <?php $index=count($this->page_groups)+20; ?>
+        <?php foreach( $this->page_groups as $group_name => $group ) { ?>
+            <?php if( is_array($group['pages']) && count($group['pages']) > 0 ) { ?>
+                <div class="dashboard_groups">
+                    <div class="group">
+                        <div class="group_img">
+                            <img src="/uploads/orders/icons/<?php echo $group['image']; ?>"
+                                 width="32" height="32" alt="<?php echo $group['page_group_name']; ?>">
+                        </div><!-- end group_img div -->
+                        <div class="group_txt">
+                            <?php echo $group['page_group_name']; ?>
+                        </div><!-- end group_txt div -->
+                        <div class="clear"></div>
+                    </div>
+                    <div class="dashboard_pages_inactive" id="dpi_<?php echo $group['page_group_id']; ?>"
+                         style="z-index: <?php echo $index; ?>;">
+                        <?php if( is_array($group['pages']) ) { ?>
+                            <?php $i=0; ?>
+                            <?php foreach( $group['pages'] as $page ) { ?>
+                                <div class="page">
+                                    <a href="http://<?php echo $page['host'].$page['path']; ?>">
+                                        <div class="page-label">
+                                            <?php echo $page['page_name']; ?>
+                                        </div>
+                                    </a>
+                                    <?php if( $i == 0 && count($group['pages']) > 1 ) { ?>
+                                        <a href="#" class="drop-panel" id="dpl_<?php echo $group['page_group_id']; ?>"></a>
+                                        <div class="clear"></div>
+                                    <?php } ?>
+                                </div>
+                                <?php ++$i; ?>
+                            <?php } ?>
+                        <?php } ?>
+                    </div><!-- end dashboard_pages div -->
+                </div><!-- end dashboard_groups div -->
+            <?php } ?>
+            <?php --$index; ?>
+        <?php } ?>
+    <?php } ?>
+    <div class="clear"></div>
+
+</div><!-- end dashboard_module div -->

@@ -1,0 +1,51 @@
+<?php if($this->type =='cust'){?>
+    <table id="form" width="600">
+        <tr>
+            <td colspan=2 class="top-header">Customer Info</td>
+        </tr>
+        <tr>
+            <td class="form-header">Address</td>
+            <td class="form-field"><?=$this->info['cust_address'].','.$this->info['cust_city'].','.$this->info['cust_state'].' '.$this->info['cust_zip'];?></td>
+        </tr>
+        <tr>
+            <td class="form-header">Phone</td>
+            <td class="form-field"><?=$this->info['cust_phone'];?></td>
+        </tr>
+        <tr>
+            <td class="form-header">Email</td>
+            <td class="form-field"><?=$this->info['cust_email'];?></td>
+        </tr>
+        <tr>
+            <td class="form-header">License no</td>
+            <td class="form-field"><?=$this->info['cust_lic_no'];?></td>
+        </tr>
+        <tr>
+            <td class="form-header">Contact</td>
+            <td class="form-field"><?=$this->info['cust_contact'];?></td>
+        </tr>        
+    </table>
+<?php }else if($this->type =='add_row'){ ?>
+        <tr class="prod_rows" id="prod_<?=$this->row_no?>">
+            <td class="form-field">
+                <?=$this->row_no?>
+                <input type="hidden" name="line_count[]" value="<?=$this->row_no?>"/>
+            </td>
+            <td class="form-field">
+                <select name="product_<?=$this->row_no?>" id="product_<?=$this->row_no?>" class="product">
+                    <?php foreach($this->products as $prod){ ?>
+                        <option value="<?=$prod['prod_id']?>"><?=$prod['prod_desc']?></option>
+                    <?php } ?>
+                </select>
+            </td>
+            <td class="form-field"><input type="text" name="code_<?=$this->row_no?>" size="12"/></td>
+            <td class="form-field"><input type="text" name="qty_<?=$this->row_no?>" class="line_qty" size="5" required="required"/></td>
+            <td class="form-field"><input type="text" name="price_<?=$this->row_no?>" class="line_price" size="5" required="required"/></td>
+            <td class="form-field"><div id="line_total_<?=$this->row_no?>"></div></td>
+            <td class="form-field">
+                <a class="delete_supplement" rel="del_<?=$this->row_no?>">
+                    <img src="/images/icons/famfam/delete.png" title="delete selected item">
+                </a>
+            </td>
+        </tr>
+<?php } ?>
+

@@ -1,0 +1,74 @@
+<div class="page_title">Login</div>
+
+<div class="page_description">
+    <table class="special-message">
+
+        <tr>
+            <td></td>
+            <td style="text-align: center; font-size: 18px; border-bottom: 1px solid red; padding-bottom: 10px; margin-bottom: 10px; ">Password requirements.</td>
+        </tr>
+        <tr>
+            <td class="icon" rowspan="2"><img src="/images/warning.png" /></td>
+            <td class="message">
+                - Passwords can't contain any variation of the words jarrow, password, your first name, your last name, your username or your email. <br>
+                - Your password has to be at least 7 characters long. <br>
+                - Use at least one number. <br>
+                - One uppercase letter. <br>
+                - One lowercase letter.<br>
+                - One special symbol. <br>
+                - Passwords must be changed at least once every 6 months. <br>
+                Thanks for your time.
+            </td>
+        </tr>
+    </table>
+</div>
+
+<!-- SYSTEM MESSAGES -->
+<?php if (is_array($this->messages) && count($this->messages) > 0) { ?>
+    <div id="messages">
+        <ul>
+            <?php foreach ($this->messages as $message) { ?>
+                <li><?php echo $message; ?></li>
+            <?php } ?>
+        </ul>
+    </div><!-- end messages div -->
+<?php } ?>
+
+
+<?php
+if (preg_match('/MSIE\s(?P<v>\d+)/i', @filter_input(INPUT_SERVER,'HTTP_USER_AGENT'), $B) && $B['v'] <= 8) { ?>
+    <div class="login">
+        <form enctype="multipart/form-data" method="post" action="">
+            <table id="login-form">
+                <tr>
+                    <td class="login-field">New Password</td>
+                    <td class="login-field"><?php echo $this->form->password; ?></td>
+                </tr>
+                <tr>
+                    <td class="login-field">Confirm Password</td>
+                    <td class="login-field"><?php echo $this->form->password_conf; ?></td>
+                </tr>
+                <tr>
+                    <td colspan=2 class="form-submit"><?php echo $this->form->submit; ?></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+<?php } else { ?>
+    <div class="container">
+        <section id="content">
+            <form enctype="multipart/form-data" method="post" action="" class="show-loader">
+                <div>
+                    <?php echo $this->form->password; ?>
+                </div>
+                <div>
+                    <?php echo $this->form->password_conf; ?>
+                </div>
+                <div>
+                    <?php echo $this->form->submit; ?>
+                </div>
+            </form>
+        </section>
+    </div>
+<?php }?>
+

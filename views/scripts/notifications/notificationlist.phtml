@@ -1,0 +1,42 @@
+<!-- BREAD CRUMB NAVIGATOR PANEL -->
+<div class="bread_crumb_module">
+	<div class="bread_crumb">	
+		<ul>
+			<li><a href="/dashboard">Home</a></li>
+			<li><?php echo $this->title; ?></li>
+		</ul>
+	</div><!-- end bread_crumb div -->
+</div><!-- end bread_crumb_module div -->
+<div class="clear"></div>
+
+<!-- SYSTEM MESSAGES -->
+<?php if( is_array($this->messages) && count($this->messages) > 0 ) { ?>
+	<div id="messages">
+		<ul>
+		<?php foreach( $this->messages as $message ) { ?>
+			<li><?php echo $message; ?></li>
+		<?php } ?>
+		</ul>
+	</div><!-- end messages div -->
+<?php } ?>
+
+<div class="notification_module">
+    
+    <?php foreach( $this->notifications as $notification ) { ?>
+    <div class="notification_<?php echo $notification['notification_id']; ?>">
+        <div class="notification_header">
+        	<table width="100%" cellspacing=0 cellpadding=0>
+            	<tr>
+                	<td>
+        				<?php echo date("m/d/Y h:i:s A", strtotime($notification['timestamp']))." by ".$notification['name']; ?>
+                    </td>
+                </tr>
+        	</table>
+        </div><!-- end notification_header div -->
+        <div class="notification_content">
+        	<?php echo $notification['message']; ?>
+        </div><!-- end notification_content div -->
+    </div><!-- end notification_ID div -->
+	<?php } ?>
+    
+</div><!-- end notification_module div -->

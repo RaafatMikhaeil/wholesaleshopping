@@ -1,0 +1,99 @@
+<!-- BREAD CRUMB NAVIGATOR PANEL -->
+<div class="bread_crumb_module">
+	<div class="bread_crumb">	
+		<ul>
+			<li><a href="/dashboard">Home</a></li>
+            <li><a href="/page/pages">Page List</a></li>
+			<li><?php echo $this->title; ?></li>
+		</ul>
+	</div><!-- end bread_crumb div -->
+</div><!-- end bread_crumb_module div -->
+<div class="clear"></div>
+
+<!-- SYSTEM MESSAGES -->
+<?php if( is_array($this->messages) && count($this->messages) > 0 ) { ?>
+	<div id="messages">
+		<ul>
+		<?php foreach( $this->messages as $message ) { ?>
+			<li><?php echo $message; ?></li>
+		<?php } ?>
+		</ul>
+	</div><!-- end messages div -->
+<?php }
+
+function buildSelect($array, $level = 0,$parent_id) {
+    foreach ($array as $group) {
+        $selected = '';
+        if ($group['data']['page_group_id']== $parent_id){
+            $selected = 'selected="selected"';
+        }
+        $space = '';
+        $i=0;
+        while($i <= $level){
+            $space .= '&#160;';
+            $i++;
+        }
+        $tree .= '<option value="'. $group['data']['page_group_id'].'" '.$selected.'>'.$space.$group['data']['page_group_name'] . '</option>';
+        if (isset($group['children'])) {
+            $tree .= buildSelect($group['children'], $level + 1,$parent_id);
+        }
+    }
+    if($level == 0) {
+        $tree = '<option value="0" >...</option>'.$tree;
+    }
+
+    return $tree;
+}
+
+$parent_id = 0;
+if ( isset($this->page) ) {
+    $parent_id = $this->page->getPage_parent_id();
+}
+$group_tree = buildSelect($this->pagegroups,0,$parent_id);?>
+
+
+<div class="form_options">[ <a href="/page/pages">Cancel</a> ]</div>
+
+<form enctype="multipart/form-data" method="post" action="">
+	<?php echo $this->form->page_id; ?>
+    <table id="form">
+    	<tr>
+            <td colspan=2 class="top-header">Page Manager</td>
+        </tr>
+        <tr>
+            <td class="form-header">Page Name</td>
+            <td class="form-field"><?php echo $this->form->page_name; ?></td>
+        </tr>
+        <tr>
+            <td class="form-header">Page Group</td>
+            <td class="form-field"><?php echo $this->form->page_group_id; ?></td>
+        </tr>
+        <tr>
+            <td class="form-header">Parent</td>
+            <td class="form-field">
+                <select name="page_parent_id" id="page_parent_id" class="form-element">
+                    <?= $group_tree; ?>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td class="form-header">Status</td>
+            <td class="form-field"><?php echo $this->form->page_active; ?></td>
+        </tr>
+        <tr>
+            <td class="form-header">Show in Dashboard</td>
+            <td class="form-field"><?php echo $this->form->show_in_dashboard; ?></td>
+        </tr>
+        <tr>
+            <td class="form-header">Page Host</td>
+            <td class="form-field"><?php echo $this->form->host; ?></td>
+        </tr>
+        <tr>
+            <td class="form-header">Page Path</td>
+            <td class="form-field"><?php echo $this->form->path; ?></td>
+        </tr>
+        <tr>
+            <td colspan=2 class="form-submit"><?php echo $this->form->submit; ?></td>
+        </tr>
+    </table>
+</form>

@@ -1,0 +1,78 @@
+<!-- BREAD CRUMB NAVIGATOR PANEL -->
+<div class="bread_crumb_module">
+    <div class="bread_crumb">	
+        <ul>
+            <li><a href="/dashboard">Home</a></li>
+            <li><?php echo $this->title; ?></li>
+        </ul>
+    </div><!-- end bread_crumb div -->
+</div><!-- end bread_crumb_module div -->
+<div class="clear"></div>
+
+<!-- SYSTEM MESSAGES -->
+<?php if (is_array($this->messages) && count($this->messages) > 0) { ?>
+    <div id="messages">
+        <ul>
+            <?php foreach ($this->messages as $message) { ?>
+                <li><?php echo $message; ?></li>
+            <?php } ?>
+        </ul>
+    </div><!-- end messages div -->
+<?php } ?>
+<div class="form_options">[ <a href="/wholesale/categories">Cancel</a> ]</div>
+<form method="post" action="" enctype="multipart/form-data" class="show-loader">
+    <?php echo $this->form->cat_id; ?>
+    <table id="form" width="600">
+        <tr>
+            <td colspan=2 class="top-header">Categories Manager</td>
+        </tr>
+        <tr>
+            <td class="form-header">Name</td>
+            <td class="form-field"><?php echo $this->form->cat_name; ?></td>
+        </tr>
+        <tr>
+            <td class="form-header">Desc</td>
+            <td class="form-field"><?php echo $this->form->cat_desc; ?></td>
+        </tr>
+        <tr>
+            <td class="form-header" width="220">Active</td>
+            <td class="form-field"><?php echo $this->form->cat_status; ?></td>
+        </tr>
+        <tr>
+            <td class="form-header" width="220">Display</td>
+            <td class="form-field"><?php echo $this->form->cat_display; ?></td>
+        </tr>
+        <tr>
+            <td class="form-header" width="220">Image</td>
+            <td class="form-field">
+                <?php echo $this->form->cat_image; ?>
+                <div style="float:right">
+                <?php
+                if(!empty(trim($this->values['cat_image']))){
+                    $folder_path = Zend_Registry::get("full_url")."/uploads/categories";
+                    echo "<a target='_blank' href='$folder_path/{$this->values['cat_image']}'>"
+                    . "<img src='$folder_path/sm_{$this->values['cat_image']}'/>"
+                    . "</a>";
+                }
+                ?>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="form-header">Parent</td>
+            <td class="form-field">
+                <?php
+                $cat_parent = $this->form->cat_parent->getValue(); ?>
+                <div class="frmSearch" style="width:405px;">
+                    <input autocomplete="off" type="text" class="search-box" id="search-box_cat" value="<?=$this->categories[$cat_parent]?>" rel="<?=$this->form->cat_id->getValue()?>" style="width:350px;"/>
+                    <div class="suggesstion-box" id="suggesstion-box_cat"></div>
+                </div>
+                <input type="hidden" name="cat_parent" value="<?=$cat_parent?>" />
+            </td>
+        </tr>
+        
+        <tr>
+            <td colspan=2 class="form-submit"><?php echo $this->form->submit; ?></td>
+        </tr>
+    </table>
+</form>

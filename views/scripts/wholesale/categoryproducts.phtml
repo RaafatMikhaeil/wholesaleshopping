@@ -1,0 +1,99 @@
+<!-- BREAD CRUMB NAVIGATOR PANEL -->
+<div class="bread_crumb_module">
+    <div class="bread_crumb">	
+        <ul>
+            <li><a href="/dashboard">Home</a></li>
+            <li><a href="/wholesale/categories">Categories List</a></li>
+            <li><?php echo $this->title; ?></li>
+        </ul>
+    </div><!-- end bread_crumb div -->
+</div><!-- end bread_crumb_module div -->
+<div class="clear"></div>
+
+<!-- SYSTEM MESSAGES -->
+<?php if (is_array($this->messages) && count($this->messages) > 0) { ?>
+    <div id="messages">
+        <ul>
+            <?php foreach ($this->messages as $message) { ?>
+                <li><?php echo $message; ?></li>
+            <?php } ?>
+        </ul>
+    </div><!-- end messages div -->
+<?php } ?>
+
+<div class="content_header"><?php echo $this->title; ?> [ group: <?php echo $this->category->getCat_name(); ?> ]</div>
+<div id="usergroup_assignments"  style="width: 930px;">
+    <div class="not_in"  style="height: 407px; width: 450px;">
+        <table class="inner_page_table">
+            <thead>
+                <tr>
+                    <td>Unassigned Products</td>
+                </tr>
+            <tbody>
+                <tr>
+                    <td>
+                        <div class="user_list">
+                            <table class="user_page_table">
+                                <?php
+                                $i = 0;
+                                $read_only = false;
+                                ?>
+                                <?php foreach ($this->products as $prod) { ?>
+                                        <tr class="<?php echo (!isset($this->assigned[$prod['prod_id']]))?'show':'hide' ;?>" id="out_row_<?php echo $prod['prod_id']; ?>">
+                                            <td><?php echo $prod['prod_desc']; ?></td>
+                                            <td class="inner-table-option" width="20">
+                                                <?php if (!$read_only) { ?>
+                                                    <a class="add" id="<?php echo $prod['prod_id']; ?>" 
+                                                       href="/wholesale/productcategoryassignment/group/<?=$this->category->getCat_id()?>/user/<?php echo $prod['prod_id']; ?>">
+                                                        <img src="/images/icons/famfam/add.png" style="cursor: pointer;" title="add this product to the selected group" />
+                                                    </a>
+                                                <?php } ?>
+                                            </td>
+                                        </tr>
+                                        <?php ++$i; ?>
+                                <?php } ?>
+                            </table><!-- end page_table -->
+                        </div><!-- end user_list div -->
+                    </td>
+                </tr>
+            </tbody>
+        </table><!-- end inner_page_table -->
+    </div><!-- end not_in div -->
+
+    <div class="is_in"  style="height: 407px; width: 450px;">
+        <table class="inner_page_table">
+            <thead>
+                <tr>
+                    <td>Assigned Products</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <div class="user_list">
+                            <table class="user_page_table">
+                                <?php $i = 0; ?>
+                                <?php foreach ($this->products as $prod) { ?>
+                                        <tr class="<?php echo (isset($this->assigned[$prod['prod_id']]))?'show':'hide' ;?>" id="in_row_<?php echo $prod['prod_id']; ?>">
+                                            <td class="inner-table-option" width="20">
+                                                <?php if (!$read_only) { ?>
+                                                    <a class="remove" id="<?php echo $prod['prod_id']; ?>" 
+                                                       href="/wholesale/productcategoryremoval/group/<?=$this->category->getCat_id()?>/user/<?php echo $prod['prod_id']; ?>">
+                                                        <img src="/images/icons/famfam/delete.png" style="cursor: pointer;" title="add this product to the selected group" />
+                                                    </a>
+                                                <?php } ?>
+                                            </td>
+                                            <td><?php echo $prod['prod_desc']; ?></td>
+                                        </tr>
+                                        <?php ++$i; ?>
+                                <?php } ?>
+                            </table><!-- end user_page_table -->
+                        </div><!-- end user_list div -->
+                    </td>
+                </tr>
+            </tbody>
+        </table><!-- end inner_page_table -->
+    </div><!-- end is_in div -->
+    <div class="clear"></div>
+
+</div><!-- end usergroup_assignments div -->

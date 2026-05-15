@@ -1,0 +1,133 @@
+<?php if ($this->type == 'cust') { ?>
+<script type="text/javascript">
+    $("#cust_licexp_update").datepicker();
+</script>
+    <table id="form" width="600">
+        <tr>
+            <td colspan=2 class="top-header">Customer Info</td>
+        </tr>
+        <tr>
+            <td class="form-header">Address</td>
+            <td class="form-field"><?= $this->info['cust_address'] . ',' . $this->info['cust_city'] . ',' . $this->info['cust_state'] . ' ' . $this->info['cust_zip']; ?></td>
+        </tr>
+        <tr>
+            <td class="form-header">License no</td>
+            <td class="form-field"><?= $this->info['cust_lic_no']; ?></td>
+        </tr>
+        <tr>
+            <td class="form-header">License Exp Date</td>
+            <td class="form-field">
+                <?php $lic_exp =  (isset($this->info['cust_lic_exp']) && $this->info['cust_lic_exp'] != '0000-00-00')?date('m/d/Y', strtotime($this->info['cust_lic_exp'])):''; ?>
+                <input size="15" type="text" class="form-element" id="cust_licexp_update" name="cust_licexp_update" value="<?= $lic_exp; ?>"/>
+                <?php echo ($this->info['cust_lic_exp'] >= date('Y-m-d'))?'<span style="color:green"><b>Valid</b></span>':'<span style="color:red"><b>Expired</b></span>'; ?>
+            </td>
+        </tr>
+        <tr>
+            <td class="form-header">Phone</td>
+            <td class="form-field">
+                <input size="15" type="text" class="form-element" name="cust_phone_update" value="<?= $this->info['cust_phone']; ?>"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form-header">Email</td>
+            <td class="form-field">
+                <input size="30" type="text" class="form-element" name="cust_email_update" value="<?= $this->info['cust_email']; ?>"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form-header">Contact</td>
+            <td class="form-field">
+                <input size="30" type="text" class="form-element" name="cust_contact_update" value="<?= $this->info['cust_contact']; ?>"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="form-header" colspan="2" style="text-align: center">
+                <button id="update_cust_info" style="cursor: pointer;">Update</button>
+            </td>
+        </tr>
+    </table>
+<?php } else if ($this->type == 'add_row') { ?>
+    <tr class="prod_rows" id="prod_<?= $this->row_no ?>">
+        <td class="form-field">
+            <?= $this->row_no ?>
+            <input type="hidden" name="line_count[]" value="<?= $this->row_no ?>"/>
+        </td>
+        <td class="form-field">
+            <input type="checkbox" class="check_line_count" id="checkline_<?= $this->row_no ?>" />
+        </td>
+        <td class="form-field">
+            <div class="frmSearch" style="width:405px;">
+                <input autocomplete="off" rel='<?= $this->row_no ?>' type="text" class="search-box search-box_product" id="search-box_<?= $this->row_no ?>" placeholder="Product Name" style="width:400px;" />
+                <div class="suggesstion-box" id="suggesstion-box_<?= $this->row_no ?>"></div>
+            </div>
+            <input type="hidden" class="product_saved" name="product_<?= $this->row_no ?>" value="" />
+        </td>
+<!--        <td class="form-field"><input type="text" name="code_<?= $this->row_no ?>" class="product_scan" size="12"/></td>-->
+        <td class="form-field"><div class="code_data product_scan" id="code_<?= $this->row_no ?>"></div></td>
+        
+        <td class="form-field"><div id="desc_<?= $this->row_no ?>"></div></td>
+        <td class="form-field">
+            <select name="linetype_<?= $this->row_no ?>" class="inv_line_type">
+                <option value="1">Sale</option>
+                <option value="2">Return</option>
+                <option value="3">Damage</option>
+            </select>
+        </td>
+        <td class="form-field"><input autocomplete="off" type="text" name="qty_<?= $this->row_no ?>" value="1" class="line_qty" size="5" maxlength="4" required="required"/></td>
+        <td class="form-field"><input autocomplete="off" type="text" name="price_<?= $this->row_no ?>" class="line_price" size="5" maxlength="6" required="required"/></td>
+        <td class="form-field">
+            <div id="line_Last_<?= $this->row_no ?>"></div>
+            <input type="hidden" name="line_Last_input_<?= $this->row_no ?>" value="" />
+        </td>
+        <td class="form-field"><div id="line_total_<?= $this->row_no ?>"></div></td>
+        <td class="form-field">
+            <a class="delete_supplement" rel="del_<?= $this->row_no ?>">
+                <img src="/images/icons/famfam/delete.png" title="delete selected item">
+            </a>
+        </td>
+    </tr>
+<?php } else if ($this->type == 'add_row_pop') { ?>
+    <?php if ((int) $this->prod_info['prod_id'] > 0) { ?>
+        <tr class="prod_rows" id="prod_<?= $this->row_no ?>">
+            <td class="form-field">
+                <?= $this->row_no ?>
+                <input type="hidden" name="line_count[]" value="<?= $this->row_no ?>"/>
+            </td>
+            <td class="form-field">
+                <input type="checkbox" class="check_line_count" id="checkline_<?= $this->row_no ?>" />
+            </td>
+            <td class="form-field">
+                <select name="product_<?= $this->row_no ?>" id="product_<?= $this->row_no ?>" class="product" style="width:400px;">
+                    <option selected="selected" value="<?= $this->prod_info['prod_id'] ?>"><?= $this->prod_info['prod_desc'] ?></option>
+                </select>
+            </td>
+            
+<!--            <td class="form-field">
+                <input autocomplete="off" type="text" name="code_<?= $this->row_no ?>" value="<?= $this->prod_info['prod_code'] ?>" class="product_scan" size="12"/>
+            </td>-->
+            
+            <td class="form-field"><div class="code_data product_scan" id="code_<?= $this->row_no ?>"><?= $this->prod_info['prod_code'] ?></div></td>
+            
+            <td class="form-field"><div id="desc_<?= $this->row_no ?>"><?= $this->prod_info['prod_name'] ?></div></td>
+            <td class="form-field">
+                <select name="linetype_<?= $this->row_no ?>" class="inv_line_type">
+                    <option value="1">Sale</option>
+                    <option value="2">Return</option>
+                    <option value="3">Damage</option>
+                </select>
+            </td>
+            <td class="form-field"><input autocomplete="off" type="text" name="qty_<?= $this->row_no ?>" value="1" class="line_qty" size="5" maxlength="4" required="required"/></td>
+            <td class="form-field"><input autocomplete="off" type="text" name="price_<?= $this->row_no ?>" value="<?= $this->prod_info['prod_sale'] ?>" maxlength="6" class="line_price" size="5" required="required"/></td>
+            <td class="form-field">
+                <div id="line_Last_<?= $this->row_no ?>"><?= $this->last_pp['product_price'] ?></div>
+                <input type="hidden" name="line_Last_input_<?= $this->row_no ?>" value="<?= $this->last_pp['product_price'] ?>" />
+            </td>
+            <td class="form-field"><div id="line_total_<?= $this->row_no ?>"><?= $this->prod_info['prod_sale'] ?></div></td>
+            <td class="form-field">
+                <a class="delete_supplement" rel="del_<?= $this->row_no ?>">
+                    <img src="/images/icons/famfam/delete.png" title="delete selected item">
+                </a>
+            </td>
+        </tr>
+    <?php } else echo 'not found'; ?>
+<?php } ?>

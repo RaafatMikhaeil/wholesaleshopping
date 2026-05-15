@@ -1,0 +1,113 @@
+<!-- BREAD CRUMB NAVIGATOR PANEL -->
+<div class="bread_crumb_module">
+	<div class="bread_crumb">	
+		<ul>
+			<li><a href="/dashboard">Home</a></li>
+            <li><a href="/page/usergroups">User Group List</a></li>		
+			<li><?php echo $this->title; ?></li>
+		</ul>
+	</div><!-- end bread_crumb div -->
+</div><!-- end bread_crumb_module div -->
+<div class="clear"></div>
+
+<!-- SYSTEM MESSAGES -->
+<?php if( is_array($this->messages) && count($this->messages) > 0 ) { ?>
+	<div id="messages">
+		<ul>
+		<?php foreach( $this->messages as $message ) { ?>
+			<li><?php echo $message; ?></li>
+		<?php } ?>
+		</ul>
+	</div><!-- end messages div -->
+<?php }
+
+if(Utility_Functions::canUserAccess("readOnly")) $read_only=true;
+else $read_only=false;
+
+function createList($array, $level = 0,$pg_pages,$perm_groups) {
+    $protocol   =   Zend_Registry::get("protocol");
+    foreach ($array as $menu) {
+        $class = "";
+        if ($level != 0){
+            $class = "_sub";
+        }
+        $tree .= '
+            <li>
+                <a href="#" class="expand_list'.$class.'" id="'.$menu['page_group_id'].'" title="expand and view the contents of this page group">
+                    <div class="pagegroup_title'.$class.'">
+                        <div class="left_end"></div>
+                        <div class="label">'.$menu['page_group_name'].'</div>
+                        <div class="right_end"></div>
+                        <div class="clear"></div>
+                    </div>
+                </a>';
+        if (isset($menu['children']) || isset($menu['pages'])) {
+            $tree .= '<ul class="pages'.$class.'" id="pages_'.$menu['page_group_id'].'">
+                        <li>
+                            <table class="inner_page_table">
+                                    <tbody>';
+        }
+        if (isset($menu['pages'])) {
+            $i=0;
+            foreach ($menu['pages'] as $page) {
+                $path=$protocol.$page['host'].$page['path'];
+                $tree .= '<tr class="row_'. $i%2 .'" id="'. $page['page_id'].'">
+                    <td width="230">'. $page['page_name'].'</td>
+                    <td>'. $page['path'].'</td>
+                    <td width="143">';
+                        if( $read_only ) {
+                            if( isset($pg_pages[$page['page_id']]['page_name']) ) {
+                                $tree .= '<div class="yes-on" id="yes_'. $page['page_id'].'">Yes</div>
+                                            <div class="no-off" id="no_'. $page['page_id'].'">No</div>
+                                            <div class="clear"></div>';
+                            } else {
+                                $tree .= '<div class="yes-off" id="yes_'. $page['page_id'].'">Yes</div>
+                                    <div class="no-on" id="no_'. $page['page_id'].'">No</div>
+                                    <div class="clear"></div>';
+                            }
+                        } else if( isset($pg_pages[$page['page_id']]['page_name']) ) {
+                            $tree .= '<a class="change" href="/page/usergrouppageassignment/group/'. $perm_groups->getPermission_group_id().'/page/'. $page['page_id'].'">
+                                        <div class="yes-on" id="yes_'. $page['page_id'].'">Yes</div>
+                                    </a>
+                                    <a class="change" href="/page/usergrouppageremoval/group/'. $perm_groups->getPermission_group_id().'/page/'. $page['page_id'].'">
+                                        <div class="no-off" id="no_'. $page['page_id'].'">No</div>
+                                    </a>
+                                    <div class="clear"></div>';
+                        } else {
+                            $tree .= '<a class="change" href="/page/usergrouppageassignment/group/'. $perm_groups->getPermission_group_id().'/page/'. $page['page_id'].'">
+                                        <div class="yes-off" id="yes_'. $page['page_id'].'">Yes</div>
+                                    </a>
+                                    <a class="change" href="/page/usergrouppageremoval/group/'. $perm_groups->getPermission_group_id().'/page/'. $page['page_id'].'">
+                                        <div class="no-on" id="no_'. $page['page_id'].'">No</div>
+                                    </a>
+                                    <div class="clear"></div>';
+                        }
+                        $tree .= ' </td>
+                                </tr>';
+                ++$i;
+            }
+        }
+
+        if (isset($menu['children'])) {
+            $tree .= '<tr><td colspan="3">'.createList($menu['children'], $level + 1,$pg_pages,$perm_groups).'</td></tr>';
+        }
+
+        if (isset($menu['children']) || isset($menu['pages'])) {
+            $tree .= '</tbody>
+                    </table>
+                </li>
+            </ul>';
+        }
+        $tree .= '</li>';
+    }
+    return $tree;
+}
+$page_tree = createList($this->page_tree,0,$this->pg_pages,$this->permission_group); ?>
+
+<div class="content_header"><?php echo $this->title; ?> [ group: <?php echo $this->permission_group->getPermission_group_title(); ?> ]</div>
+
+<div id="usergroup_pagegroups">
+    <ul class="page_groups">
+        <?= $page_tree; ?>
+    </ul>
+</div><!-- end usergroup_assignments div -->

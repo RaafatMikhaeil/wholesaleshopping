@@ -1,0 +1,111 @@
+<!-- SYSTEM MESSAGES -->
+<?php if( is_array($this->messages) && count($this->messages) > 0 ) { ?>
+	<div id="messages">
+		<ul>
+		<?php foreach( $this->messages as $message ) { ?>
+			<li><?php echo $message; ?></li>
+		<?php } ?>
+		</ul>
+	</div><!-- end messages div -->
+<?php } ?>
+<!-- BREAD CRUMB NAVIGATOR PANEL -->
+<div class="bread_crumb_module">
+    <div class="bread_crumb">	
+        <ul>
+            <li><a href="/dashboard">Home</a></li>
+            <li><?php echo $this->title; ?></li>
+        </ul>
+    </div><!-- end bread_crumb div -->
+</div><!-- end bread_crumb_module div -->
+<div class="clear"></div>
+
+<div style="margin: 0 auto; text-align: center; ">
+    <table style="margin:0 auto;">
+        <tr>
+        </tr>
+        <tr>
+            <td class="form-element">Report type</td>
+            <td class="form-element">
+                <input type="radio" class="r_type" value="pa" name="r_type" <?php echo ($this->entries['r_type']=="pa" || $this->entries['r_type']==""  ) ? 'checked="checked"' :'';?>/>Page Access
+                <input type="radio" class="r_type" value="ga" name="r_type" <?php echo ($this->entries['r_type']=="ga" ) ? 'checked="checked"' :'';?>/>Group Permission
+                <input type="radio" class="r_type" value="ua" name="r_type" <?php echo ($this->entries['r_type']=="ua" ) ? 'checked="checked"' :'';?>/>User Access
+            </td>
+        </tr>
+    </table>
+    <form method="post">
+        <table id="pa_form" class="search_form <?php echo ($this->entries['r_type']!="pa" && $this->entries['r_type']!=""  ) ? 'hidden' :'';?>" style="margin:0 auto;">   
+            <input type="hidden" value="pa" name="r_type" >               
+            <tr>
+                <td class="form-element">Name</td>
+                <td class="form-element">
+                    <select name="page_id" style="width:310px">
+                        <?php foreach ($this->list['pages'] as $page) { ?> 
+                            <option value="<?php echo $page['page_id'] ?>" <?php echo ($this->entries['page_id']== $page['page_id'] ) ? 'selected="selected"' :'';?> ><?php echo $page['page_name'] ?> - <?php echo $page['path'] ?></option>
+                        <?php } ?>
+                    </select>
+                </td>
+            </tr>            
+            <tr>
+                <td colspan='2' class="form-element" style="text-align: center;">
+                    <input type="submit" name="submit" value="Search"/>
+                </td>
+            </tr>
+        </table>
+    </form>
+    <form method="post">
+        <table id="ga_form" class="search_form <?php echo ($this->entries['r_type']!="ga") ? 'hidden' :'';?>" style="margin:0 auto;">  
+            <input type="hidden" value="ga" name="r_type" >
+            <tr>
+                <td class="form-element">Groups</td>
+                <td class="form-element">
+                    <select name="permission_group_id" style="width:304px">
+                        <?php foreach ($this->list['groups'] as $group) { ?> 
+                            <option value="<?php echo $group['permission_group_id'] ?>" <?php echo ($this->entries['permission_group_id']== $group['permission_group_id'] ) ? 'selected="selected"' :'';?>><?php echo $group['permission_group_title'] ?></option>
+                        <?php } ?>
+                    </select>
+                </td>
+            </tr>            
+            <tr>
+                <td colspan='2' class="form-element" style="text-align: center;">
+                    <input type="submit" name="submit" value="Search"/>
+                </td>
+            </tr>
+        </table>
+    </form>
+    <form method="post">
+        <table id="ua_form" class="search_form <?php echo ($this->entries['r_type']!="ua") ? 'hidden' :'';?>" style="margin:0 auto;">  
+            <input type="hidden" value="ua" name="r_type" >
+            <tr>
+                <td class="form-element">Users</td>
+                <td class="form-element">
+                    <select name="user_id" style="width:310px">
+                        <?php foreach ($this->list['users'] as $user) { ?> 
+                            <option value="<?php echo $user['user_id'] ?>" <?php echo ($this->entries['user_id']== $user['user_id'] ) ? 'selected="selected"' :'';?>><?php echo $user['name'] ?></option>
+                        <?php } ?>
+                    </select>
+                </td>
+            </tr>            
+            <tr>
+                <td colspan='2' class="form-element" style="text-align: center;">
+                    <input type="submit" name="submit" value="Search"/>
+                </td>
+            </tr>
+        </table>
+    </form>
+
+<?php if( $this->entries['r_type']=="pa" ) { 
+        echo $this->partial('/partials/page/pageaccess.phtml', array(    
+            "records" => $this->pageGroups
+        )); 
+    } else if( $this->entries['r_type']=="ga" ) { 
+        echo $this->partial('/partials/page/grouppermission.phtml', array(    
+            "records" => $this->groupUsers,
+            "pages" => $this->pages
+        )); 
+    } else if( $this->entries['r_type']=="ua" ) {
+        echo $this->partial('/partials/page/useraccess.phtml', array(    
+            "records" => $this->userGroups,
+            "userGroupPages" => $this->userGroupPages
+        )); 
+    } ?>
+

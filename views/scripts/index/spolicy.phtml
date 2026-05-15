@@ -1,0 +1,70 @@
+<!-- BREAD CRUMB NAVIGATOR PANEL -->
+<div class="bread_crumb_module">
+	<div class="bread_crumb">	
+		<ul>
+			<li><a href="/dashboard">Home</a></li>
+			<li><?php echo $this->title; ?></li>
+		</ul>
+	</div><!-- end bread_crumb div -->
+</div><!-- end bread_crumb_module div -->
+<div class="clear"></div>
+
+<!-- SYSTEM MESSAGES -->
+<?php if( is_array($this->messages) && count($this->messages) > 0 ) { ?>
+	<div id="messages">
+		<ul>
+		<?php foreach( $this->messages as $message ) { ?>
+			<li><?php echo $message; ?></li>
+		<?php } ?>
+		</ul>
+	</div><!-- end messages div -->
+<?php } ?>
+
+<div class="policy_wrapper">
+	<div class="section_header">Failed Logins</div>
+    <p class="description">
+    	You only get four login attempts until your account is locked. Your account will remained locked until the
+        following day or until you notify an administrator in the IT Department. This is done to prevent people
+        from guessing user passwords.
+    </p>
+    
+    <div class="section_header">Reset Password</div>
+    <p class="description">
+    	If you forget your password, you must use the "Forgot Password" feature. The IT administrators will not reset
+        your password for you. However, you can only reset your password once per day and you must reset the password
+        on the same computer you used to place the "Forgot Password" request. If you forget your password more than once
+        in a given day, contact an administrator in the IT Department for help.
+    </p>
+    
+    <div class="section_header">Passwords</div>
+    <p class="description">
+    	Passwords can't contain any variation of the words  password, your first name, your last name, your 
+        username or your email. Passwords must also be more than 6 characters in length. Passwords must be changed 
+        at least once every 60 days.
+    </p>
+    
+    <div class="section_header">Login Timelimit</div>
+    <p class="description">
+    	While logged into the website there is a 10 minute inactivity timer. If you are inactive for longer than this
+        period of time you will be automatically logged out. In order to remain logged in simply move your mouse or 
+        type into a text area. Please log out of the system before closing your browser to help maintain system
+        integrity.
+    </p>
+    
+    <div class="section_header">User Accounts</div>
+    <p class="description">
+    	You are obligated to protect your access rights from unauthorized third party use, and you must ensure that 
+        they cannot be used by others. You must notify management immediately if you learn that 
+        your security has been violated and an unauthorized person has obtained your access rights.<br />
+        In addition sharing of accounts is not allowed, as user activity is logged. Sharing of accounts will compromise
+        the integrity of the system logs. If another account is required please contact management.
+    </p>
+    
+    <div class="section_header">System Tampering</div>
+    <p class="description">
+        Tampering with the system in an attempt to gain access to restricted information will not be tolerated. All
+        attempts to access sections of the site, which you do not have permission to view, are logged and reviewed. 
+        If it is determined that you are willfully attempting to bypass the system's security or find exploits, your 
+        supervisor will be notified and your account will be suspended indefinitely.
+    </p>
+</div><!-- end policy_wrapper div -->

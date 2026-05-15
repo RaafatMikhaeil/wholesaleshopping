@@ -1,0 +1,257 @@
+<style>
+    #scrolling{
+        width: 40%;
+        border: 1px solid black;
+        position: fixed;
+        left: 50%;
+        margin-left: -20%;
+        /* height: 40px; */
+        background-color: white;
+        padding: 5px;
+        display:  none;
+        z-index: 9;
+    }
+    .site_content{
+        padding-bottom: 800px !important;
+    }
+    #scan_activation{
+        font-size: 14px; 
+        font-weight: bold; 
+        float: left; 
+        padding: 7px; 
+        border-radius: 10px; 
+        margin-left: 20px; 
+        color:white;
+        cursor: pointer;
+    }
+    .higlight_row{
+        color: black;
+        background-color: yellow;
+    }
+    .code_data{
+        width: 100px;
+        overflow: hidden;
+    }
+</style>
+<!-- BREAD CRUMB NAVIGATOR PANEL -->
+<div class="bread_crumb_module">
+    <div class="bread_crumb">	
+        <ul>
+            <li><a href="/dashboard">Home</a></li>
+            <li><?php echo $this->title; ?></li>
+        </ul>
+    </div><!-- end bread_crumb div -->
+</div><!-- end bread_crumb_module div -->
+<div class="clear"></div>
+
+<!-- SYSTEM MESSAGES -->
+<?php if (is_array($this->messages) && count($this->messages) > 0) { ?>
+    <div id="messages">
+        <ul>
+            <?php foreach ($this->messages as $message) { ?>
+                <li><?php echo $message; ?></li>
+            <?php } ?>
+        </ul>
+    </div><!-- end messages div -->
+<?php } ?>
+<?php
+$cust_id = 0;
+$curr_inv_id = ($this->invoice_data['header']['inv_id'])?$this->invoice_data['header']['inv_id']:0;
+?>
+<div class="form_options">
+    <?php if($curr_inv_id){ ?>
+<!--    [ <a target="_blank" href="/wholesale/payment/invid/<?=$curr_inv_id?>"><img width="25" title="Add payment" src="/images/icons/payment.png" /></a> ]-->
+    [ <a onclick="window.open('/wholesale/invoiceinfo/id/<?=$curr_inv_id?>/act/printso','PrintRequest','width=1000,height=800')" href="javascript:;"><img width="25" title="Print Sales Order" src="/images/icons/invoice.png" /></a> ]
+    [ <a target="_blank" href="/wholesale/invoiceinfo/id/<?=$curr_inv_id?>/act/downloadso"><img width="25" title="Download Sales Order" src="/images/icons/famfam/disk.png" /></a> ]
+    [ <a href="/wholesale/invoice/id/<?=$curr_inv_id?>/act/convertso"><img width="25" title="Convert To Invoice" src="/images/icons/misc/folder_new.png" /></a> ]
+        <?php } ?>
+        [ <a href="/wholesale/sales-orders">Sales Order List</a> ]
+</div>
+
+<form method="post" action=""  class="show-loader form_submit">
+    <input name="cust_id_inv" id="cust_id_inv" value="<?=$cust_id?>" type="hidden"/>
+    <input name="curr_inv_id" id="curr_inv_id" value="<?= $curr_inv_id ?>" type="hidden"/>
+    <table id="form" width="600">
+        <tr>
+            <td colspan=2 class="top-header">Sales Order Data</td>
+        </tr>
+    </table>
+<!--    <div id="cust_info" style="margin: 0 auto;">
+    </div>-->
+
+    <div id="scrolling" >
+        <div id="total_lines_qtys" style="float: left; border: 1px solid black; width: 40px; height: 25px; margin-right: 10px; font-size: 16px; font-weight: bold; padding-top: 5px;"></div>
+        <input type="submit" name="submit" value="Save" style="padding:7px; float: left"/>
+        
+        <p id="scan_activation" style=""></p>
+        <input name="scan_product" id="scan_product" style="border-radius: 5px; padding: 5px; border: 2px solid lightblue;"/>
+        
+        <img src="/images/icons/misc/gtk-add.png" class="add_item" title="Add New Line" alt="add item" style="cursor: pointer; float: right; width: 30px; border: 1px solid black;">
+    </div>
+    <div id="products" style="display: none; margin-top: 40px;">
+        <table id="form" width="900" class="product_table">
+            <thead>               
+                <tr>
+                    <td colspan=11 class="top-header">Add Items</td>
+                </tr>
+                <tr>
+                    <td class="form-header"></td>
+                    <td class="form-header"><input type="checkbox" id="check_all" /></td>
+                    <td class="form-header" width='300'>Desc</td>
+                    <td class="form-header">Code</td>
+                    <td class="form-header">Avl Qty</td>
+                    <td class="form-header">Line Type</td>
+                    <td class="form-header">Qty</td>
+                    <td class="form-header">Price</td>
+                    <td class="form-header">Last PP</td>
+                    <td class="form-header">Line Total</td>
+                    <td class="form-header">
+                        <img src="/images/icons/famfam/add.png" class="add_item" alt="add item" style="cursor: pointer;">
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                if ($cust_id == 0) {
+                    $i = 0;
+                    foreach ($this->invoice_data['lines'] as $line) {
+                        $i++;
+                        ?>
+                        <tr class="prod_rows" id="prod_<?= $i ?>">
+                            <td class="form-field">
+                                <?= $i ?>
+                                <input type="hidden" name="line_count[]" value="<?= $i ?>"/>
+                            </td>
+                            <td class="form-field">
+                                <input type="checkbox" class="check_line_count" id="checkline_<?= $i ?>" />
+                            </td>
+                            <td class="form-field">
+                                <?php
+                                        $val_new = $this->products[$line['prod_id']]['prod_id'];
+                                        $desc_new = $this->products[$line['prod_id']]['prod_desc'];
+                                ?>
+                                <div class="frmSearch" style="width:405px;">
+                                    <input autocomplete="off"  rel='<?= $i ?>' type="text" class="search-box search-box_product" id="search-box_<?= $i ?>" value="<?= $desc_new ?>"  style="width:400px;"/>
+                                    <div class="suggesstion-box" id="suggesstion-box_<?= $i ?>"></div>
+                                </div>
+
+                                <input type="hidden" class="product_saved" name="product_<?= $i ?>" value="<?= $val_new ?>"/>
+
+                            </td>
+<!--                            <td class="form-field"><input type="text" name="code_<?= $i ?>" value="<?= $line['prod_code'] ?>" size="12" /></td>-->
+                            <td class="form-field"><div class="code_data product_scan" id="code_<?= $i ?>"><?= $line['prod_code'] ?></div></td>
+                            <td class="form-field"><div id="desc_<?= $i ?>"><?= $line['prod_name'] ?></div></td>
+                            <td class="form-field">
+                                <select name="linetype_<?= $i ?>" class="inv_line_type">
+                                    <option <?php echo ($line['inv_line_type'] == 1) ? 'selected="selected"' : ''; ?> value="1">Sale</option>
+                                    <option <?php echo ($line['inv_line_type'] == 2) ? 'selected="selected"' : ''; ?> value="2">Return</option>
+                                    <option <?php echo ($line['inv_line_type'] == 3) ? 'selected="selected"' : ''; ?> value="3">Damage</option>
+                                </select>
+                            </td>
+                            <td class="form-field"><input type="text" autocomplete="off"  name="qty_<?= $i ?>" value="<?= $line['product_qty'] ?>" class="line_qty" size="5" required="required"/></td>
+                            <td class="form-field"><input type="text" autocomplete="off" name="price_<?= $i ?>" value="<?= $line['product_price'] ?>" class="line_price" size="5" required="required"/></td>
+                            <td class="form-field">
+                                <div id="line_Last_<?= $i ?>"><?= $line['inv_last_pp'] ?></div>
+                                <input type="hidden" name="line_Last_input_<?= $i ?>" value="<?= $line['inv_last_pp'] ?>" />
+                            </td>
+                            <td class="form-field"><div id="line_total_<?= $i ?>"><?= $line['product_qty'] * $line['product_price'] ?></div></td>
+                            <td class="form-field">
+                                <a class="delete_supplement" rel="del_<?= $i ?>">
+                                    <img src="/images/icons/famfam/delete.png" title="delete selected item">
+                                </a>
+                            </td>
+                        </tr>
+                        <?php
+                    }
+                }
+                ?>
+            </tbody>
+        </table>
+        <table id="form" width="700">
+            <tr> 
+                <td style="text-align:right;">
+                    <b>Invoice Sub Total &nbsp;<div style="display:inline-block; width: 70px;" id="invoice_sub_total"></div></b>
+                    <input type="hidden" name="invoice_sub_total_input" id="invoice_sub_total_input"/>
+                </td>
+                <td>
+                    <b>Total Qty &nbsp;&nbsp; <div style="display:inline-block; width: 100px;" id="invoice_qty_total"></div></b>
+                    <input type="hidden" name="invoice_qty_input" id="invoice_qty_input"/>
+                    &nbsp;&nbsp;<b>Credits &nbsp;&nbsp; <div style="display:inline-block; width: 100px;" id="invoice_credit_div"></div></b>
+                    <input type="hidden" name="invoice_credit_input" id="invoice_credit_input"/>
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align:right;"><b>Discount</b></td>
+                <td><input type="number" name="discount" value="<?= $this->invoice_data['header']['inv_discount'] ?>" step="any" id="invoice_discount" size="4"/></td>
+            </tr>
+            <tr>
+                <td style="text-align:right;">
+                    <b>Shipping Charges</b>                    
+                </td>
+                <td>
+                    <input type="number" name="inv_shipping" value="<?= $this->invoice_data['header']['inv_shipping'] ?>" step="any" maxlength="2" id="invoice_shipping" style="width:100px;"/>
+                </td>
+            </tr>
+            
+            <tr>
+                <td style="text-align:right;">
+                    <b>Paid Amount</b>                    
+                </td>
+                <td>
+                    <input type="number" name="inv_payments" value="<?= $this->invoice_data['header']['inv_payments'] ?>" step="any" maxlength="2" id="invoice_payments" style="width:100px;"/>
+                </td>
+            </tr>
+            
+            <tr>
+                <td style="text-align:right;">
+                    <b>Additional Charges</b>                    
+                </td>
+                <td>
+                    <input type="number" name="inv_outstanding" value="<?= $this->invoice_data['header']['inv_outstanding'] ?>" step="any" maxlength="2" id="invoice_outstanding" style="width:100px;"/>
+                </td>
+            </tr>
+            
+            <tr>
+                <td style="text-align:right;">
+                    <b>CC Charges %</b>
+                    <input type="number" name="inv_ccp" value="<?= $this->invoice_data['header']['inv_ccp'] ?>" step="any" maxlength="2" id="invoice_ccp" style="width:40px;"/>
+                </td>
+                <td>
+                    <b>$<input type="text" name="inv_cca" id="inv_cca_input"/>
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align:right;"><b>Sales Order Total</b></td>
+                <td><b>$<div style="display:inline-block;" id="invoice_total"></div></b></td>
+                <input type="hidden" name="invoice_total_input" id="invoice_total_input"/>
+            </tr>
+            <tr>
+                <td style="text-align:right;"><b>Sales Order Date</b></td>
+                <td>
+                    <input class="date-element" type="text" name="start_date" id="start_date" 
+                           value="<?php echo ( isset($this->invoice_data['header']['inv_date']) && $this->invoice_data['header']['inv_date'] != '12/31/1969' )?date('m/d/Y', strtotime($this->invoice_data['header']['inv_date'])):date('m/d/Y'); ?>" 
+                           style="padding: 2px; background:none; color: inherit; font-size: 13px;"/>
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align:right;"><b>Document Type</b></td>
+                <td>
+                    <select name="inv_payment">
+<!--                        <option <?php echo ($this->invoice_data['header']['inv_payment'] == 'INVOICE') ? 'selected="selected"' : ''; ?> value="INVOICE">INVOICE</option>-->
+                        <option <?php echo ($this->invoice_data['header']['inv_payment'] == 'SalesOrder') ? 'selected="selected"' : ''; ?> value="SalesOrder">SalesOrder</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align: left;font-size: 14px;"><b>Notes:</b><br/>
+                    <textarea cols="20" rows="3" name="notes"><?= $this->invoice_data['header']['inv_notes'] ?></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align: center;">
+                    <input type="submit" name="submit" value="Save" style="padding:10px"/>
+                </td>
+            </tr>
+        </table>
+    </div>
+</form>

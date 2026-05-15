@@ -1,0 +1,118 @@
+<!-- BREAD CRUMB NAVIGATOR PANEL -->
+<div class="bread_crumb_module">
+	<div class="bread_crumb">	
+		<ul>
+			<li><a href="/dashboard">Home</a></li>
+            <li><a href="/notifications/notifications">Notification List</a></li>
+			<li><?php echo $this->title; ?></li>
+		</ul>
+	</div><!-- end bread_crumb div -->
+</div><!-- end bread_crumb_module div -->
+<div class="clear"></div>
+
+<!-- SYSTEM MESSAGES -->
+<?php if( is_array($this->messages) && count($this->messages) > 0 ) { ?>
+	<div id="messages">
+		<ul>
+		<?php foreach( $this->messages as $message ) { ?>
+			<li><?php echo $message; ?></li>
+		<?php } ?>
+		</ul>
+	</div><!-- end messages div -->
+<?php } ?>
+
+<div class="content_header"><?php echo $this->title; ?></div>
+
+<div id="notification_assignments">
+
+	<div class="not_in">
+    	<table class="inner_page_table">
+        	<thead>
+            	<tr>
+                	<td>Unassigned User Groups</td>
+                </tr>
+            <tbody>
+            	<tr>
+                	<td>
+                    	<div class="group_list">
+                            <table class="group_table">
+								<?php $i = 0; ?>
+                                <?php foreach( $this->groups as $group ) { ?>
+                                    <?php if( !isset($this->notification_groups[$group['permission_group_id']]['permission_group_title']) ) { ?>
+                                        <tr class="show" id="out_row_<?php echo $group['permission_group_id']; ?>">
+                                            <td><?php echo $group['permission_group_title']; ?></td>
+                                            <td class="inner-table-option" width="20">
+                                                <a class="add" id="<?php echo $group['permission_group_id']; ?>" 
+                                                    href="/notifications/notificationgroupassignment/notification/<?php echo $this->notification->getNotification_id(); ?>/group/<?php echo $group['permission_group_id']; ?>">
+                                                    <img src="/images/icons/famfam/add.png" title="add this group to the selected notification" />
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <?php ++$i; ?>
+                                    <?php } else { ?>
+                                    	<tr class="hide" id="out_row_<?php echo $group['permission_group_id']; ?>">
+                                            <td><?php echo $group['permission_group_title']; ?></td>
+                                            <td class="inner-table-option" width="20">
+                                                <a class="add" id="<?php echo $group['permission_group_id']; ?>" 
+                                                    href="/notifications/notificationgroupassignment/notification/<?php echo $this->notification->getNotification_id(); ?>/group/<?php echo $group['permission_group_id']; ?>">
+                                                    <img src="/images/icons/famfam/add.png" title="add this group to the selected notification" />
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    <?php } ?>
+                                <?php } ?>
+                            </table><!-- end group_table -->
+                        </div><!-- end group_list div -->
+                	</td>
+                </tr>
+            </tbody>
+        </table><!-- end inner_page_table -->
+    </div><!-- end not_in div -->
+    
+    <div class="is_in">
+    	<table class="inner_page_table">
+        	<thead>
+            	<tr>
+                	<td>Assigned User Groups</td>
+                </tr>
+            </thead>
+            <tbody>
+            	<tr>
+                	<td>
+                    	<div class="group_list">
+                        	<table class="group_table">
+								<?php $i = 0; ?>
+                                <?php foreach( $this->groups as $group ) { ?>
+                                    <?php if( isset($this->notification_groups[$group['permission_group_id']]['permission_group_title']) ) { ?>
+                                        <tr class="show" id="in_row_<?php echo $group['permission_group_id']; ?>">
+                                            <td class="inner-table-option" width="20">
+                                                <a class="remove" id="<?php echo $group['permission_group_id']; ?>" 
+                                                    href="/notifications/notificationgroupremoval/notification/<?php echo $this->notification->getNotification_id(); ?>/group/<?php echo $group['permission_group_id']; ?>">
+                                                    <img src="/images/icons/famfam/delete.png" title="remove this group from the selected notification" />
+                                                </a>
+                                            </td>
+                                            <td><?php echo $group['permission_group_title']; ?></td>
+                                        </tr>
+                                        <?php ++$i; ?>
+                                    <?php } else { ?>
+                                    	<tr class="hide" id="in_row_<?php echo $group['permission_group_id']; ?>">
+                                            <td class="inner-table-option" width="20">
+                                                <a class="remove" id="<?php echo $group['permission_group_id']; ?>" 
+                                                    href="/notifications/notificationgroupremoval/notification/<?php echo $this->notification->getNotification_id(); ?>/group/<?php echo $group['permission_group_id']; ?>">
+                                                    <img src="/images/icons/famfam/delete.png" title="remove this group from the selected notification" />
+                                                </a>
+                                            </td>
+                                            <td><?php echo $group['permission_group_title']; ?></td>
+                                        </tr>
+                                    <?php } ?>
+                                <?php } ?>
+                			</table><!-- end group_table -->
+            			</div><!-- end group_list div -->
+            		</td>
+            	</tr>
+            </tbody>
+        </table><!-- end inner_page_table -->
+    </div><!-- end is_in div -->
+    <div class="clear"></div>
+
+</div><!-- end notification_assignments div -->

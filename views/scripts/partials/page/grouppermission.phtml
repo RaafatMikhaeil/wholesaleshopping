@@ -1,0 +1,55 @@
+<div id="usergroup_pagegroups" class="records_list ga_list" >	
+    <table class="page_group_table">
+        <tr>
+            <td colspan=8 class="top-header">User list</td>
+        </tr>
+        <tr>
+            <td class="form-header">#</td>
+            <td class="form-header">Name</td>
+            <td class="form-header">Email</td>
+        </tr>
+        <?php 
+            $row = 0;
+            $i = 1; 
+            foreach ($this->records as $user) { ?>
+            <tr class="row_<?php echo $row % 2; ?>" id="<?php echo $user['user_id']; ?>">
+                <td><?php echo $i; ?></td>
+                <td><?php echo $user['name']; ?></td>
+                <td><?php echo $user['email']; ?></td>
+            </tr>
+            <?php 
+                ++$row;
+                ++$i; 
+            } ?>
+    </table><!-- end task_table -->
+    <div class="clear"></div>
+    <table class="page_group_table" style="width:700px;">
+        <tr>
+            <td colspan=6 class="top-header">Pages list</td>
+        </tr>
+        <tr>
+            <td class="form-header">#</td>
+            <td class="form-header">Group Name</td>
+            <td class="form-header">Page Name</td>
+            <td class="form-header">Path</td>
+            <td class="form-header">Active</td>
+            <td class="form-header">Dashboard</td>
+        </tr>
+<?php 
+    $row = 0;
+    $i = 1; 
+        foreach ($this->pages as $page) { ?>
+            <tr class="row_<?php echo $row % 2; ?>" id="<?php echo $page['page_group_id']; ?>">
+                <td><?php echo $i; ?></td>
+                <td><?php echo $page['page_group_name']; ?></td>
+                <td><?php echo $page['page_name']; ?></td>
+                <td><?php echo $page['path']; ?></td>
+                <td><?php echo ($page['page_active'] == 1) ? 'Yes' : 'No'; ?></td>
+                <td><?php echo ($page['show_in_dashboard'] == 1) ? 'Yes' : 'No'; ?></td>
+            </tr>
+        <?php 
+            ++$row;
+            ++$i; 
+        } ?>
+    </table><!-- end task_table -->
+</div>

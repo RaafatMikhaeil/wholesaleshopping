@@ -1,0 +1,32 @@
+
+<?php if( $this->pageCount ) { ?>
+	<?php preg_match("/(^\/[A-Za-z]*\/)/", $this->url(array()), $matches); $controller = $matches[0]; ?>
+	<?php preg_match("/(\/id\/[0-9]*)/", $this->url(array()), $matches);   $ticket = $matches[0]; ?>
+
+    <div class="pagination_module">
+
+        <!-- previous page -->
+        <?php if( isset($this->previous) ) { ?>
+            <a class="enabled" href="<?php echo "".$controller."REPLACE_THIS".$ticket."/page/".$this->previous; ?>">&lt; Previous</a> |
+        <?php } else { ?>
+            <a class="disabled" href="#">&lt; Previous</a> |
+        <?php } ?>
+    
+        <!-- page number -->
+        <?php foreach( $this->pagesInRange as $page ) { ?>
+            <?php if( $page != $this->current ) { ?>
+                <a class="enabled" href="<?php echo "".$controller."REPLACE_THIS".$ticket."/page/".$page; ?>"><?php echo $page; ?></a> |
+            <?php } else { ?>
+                <a class="active" href="#"><?php echo $page; ?></a> |
+            <?php } ?>
+        <?php } ?>
+    
+        <!-- next page -->
+        <?php if( isset($this->next) ){ ?>
+            <a class="enabled" href="<?php echo "".$controller."REPLACE_THIS".$ticket."/page/".$this->next; ?>">Next &gt;</a>
+        <?php } else { ?> 
+            <a class="disabled" href="#">Next &gt;</a>
+        <?php } ?> 
+	
+    </div><!-- end pagination_module div -->
+<?php } ?>

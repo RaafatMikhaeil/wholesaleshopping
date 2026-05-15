@@ -1,0 +1,89 @@
+<!-- BREAD CRUMB NAVIGATOR PANEL -->
+<div class="bread_crumb_module">
+    <div class="bread_crumb">	
+        <ul>
+            <li><a href="/dashboard">Home</a></li>
+            <li><?php echo $this->title; ?></li>
+        </ul>
+    </div><!-- end bread_crumb div -->
+</div><!-- end bread_crumb_module div -->
+<div class="clear"></div>
+
+<!-- SYSTEM MESSAGES -->
+<?php if (is_array($this->messages) && count($this->messages) > 0) { ?>
+    <div id="messages">
+        <ul>
+            <?php foreach ($this->messages as $message) { ?>
+                <li><?php echo $message; ?></li>
+            <?php } ?>
+        </ul>
+    </div><!-- end messages div -->
+<?php } ?>
+
+<div class="form_options">[ <a href="/wholesale/customers">Cancel</a> ]</div>
+
+<form method="post" action="" class="show-loader">
+    <?php echo $this->form->cust_id; ?>
+    <table id="form" width="600">
+        <tr>
+            <td colspan=2 class="top-header">Customer Manager</td>
+        </tr>
+        <tr>
+            <td class="form-header">Name</td>
+            <td class="form-field"><?php echo $this->form->cust_name; ?></td>
+        </tr>
+        <tr>
+            <td class="form-header">Address</td>
+            <td class="form-field"><?php echo $this->form->cust_address; ?></td>
+        </tr>
+        <tr>
+            <td class="form-header">City</td>
+            <td class="form-field"><?php echo $this->form->cust_city; ?></td>
+        </tr>
+        <tr>
+            <td class="form-header">State</td>
+            <td class="form-field"><?php echo $this->form->cust_state; ?></td>
+        </tr>
+        <tr>
+            <td class="form-header">Zip Code</td>
+            <td class="form-field"><?php echo $this->form->cust_zip; ?></td>
+        </tr>
+        <tr>
+            <td class="form-header" width="220">License no</td>
+            <td class="form-field"><?php echo $this->form->cust_lic_no; ?></td>
+        </tr>
+        <tr>
+            <td class="form-header" width="220">License Exp Date</td>
+            <td class="form-field">
+                <?php
+                $lic_date = $this->form->cust_lic_exp->getValue();
+                if ($lic_date != '' && $lic_date != '0000-00-00') {
+                    $value = date('m/d/Y', strtotime($lic_date));
+                    echo $this->form->cust_lic_exp->setValue($value);
+                } else {
+                    echo $this->form->cust_lic_exp;
+                }
+                ?>
+            </td>
+        </tr>
+        <tr id="shell_weight_info">
+            <td class="form-header">Phone</td>
+            <td class="form-field"><?php echo $this->form->cust_phone; ?></td>
+        </tr>
+        <tr>
+            <td class="form-header">Email</td>
+            <td class="form-field"><?php echo $this->form->cust_email; ?></td>
+        </tr>
+        <tr>
+            <td class="form-header">Contact Person</td>
+            <td class="form-field"><?php echo $this->form->cust_contact; ?></td>
+        </tr>
+        <tr>
+            <td class="form-header">Active</td>
+            <td class="form-field"><?php echo $this->form->cust_status; ?></td>
+        </tr>
+        <tr>
+            <td colspan=2 class="form-submit"><?php echo $this->form->submit; ?></td>
+        </tr>
+    </table>
+</form>

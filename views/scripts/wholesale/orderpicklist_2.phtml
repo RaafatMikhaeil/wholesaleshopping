@@ -1,0 +1,189 @@
+<?php
+$rowcount = count($this->picklist['lines']);
+$lines_per_page = 30;
+if ($rowcount > $lines_per_page) {
+    $pages = ceil($rowcount / $lines_per_page);
+} else if ($rowcount == $lines_per_page) {
+    $pages = 1;
+} else {
+    $pages = ceil($rowcount / $lines_per_page);
+}
+$y = 0;
+$page = 1;
+$sumweight = 0;
+$sumitem = 0;
+$header = $this->picklist['header'];
+?>
+<div class="pdf">
+    <table class="picking width_100">
+        <tr>
+            <td colspan="3" style="text-align: center; font-size: 18px;">
+                <b>Sales Order</b>
+            </td>
+        </tr>
+        <tr>
+            <td width="40%"><b>Customer</b></td>
+            <td width="40%"><b>Notes</b></td>
+            <td width="10%"><b>Date</b></td>
+        </tr>
+        <tr>
+            <td width="40%" style="height: 60px;"></td>
+            <td width="40%" style="height: 60px;"></td>
+            <td width="10%" style="height: 60px;"><?=date('m/d/Y', strtotime($header['inv_date']))?></td>
+        </tr>
+    </table>
+    <br>
+    <table  class="picking width_100" style="font-family: sans-serif;">                        
+        <tr>
+            <th width="40">Qty</th>
+            <th width="40">Type</th>
+            <th width="120">Item Number</th>
+            <th width="300">Item Desc</th>
+            <th width="40">Price</th>
+            <th width="40">Total</th>
+        </tr>
+        <?php
+        $total_units = $total_lines = $total_price = 0;
+        foreach ($this->picklist['lines'] as $pick) {
+            $y++;
+            $total_lines++;
+            $total_units += abs($pick['product_qty']);
+            $total_price += $pick['product_price'] * $pick['product_qty'];
+            ?> 
+            <tr>
+                <td class="cell_center"><?php echo $pick['product_qty']; ?></td>
+                <td class="cell_center"><?php echo $pick['line_type']; ?></td>
+                <td class="cell_center"><?php echo $pick['prod_no']; ?></td>
+                <td class="cell_center"><?php echo $pick['prod_desc']; ?></td>
+                <td class="cell_center">$<?php echo $pick['product_price']; ?></td> 
+                <td class="cell_center">$<?php echo number_format(($pick['product_price'] * $pick['product_qty']), 2); ?></td> 
+            </tr>  
+            <?php
+            if ($page == 1) {
+                $records_count = $lines_per_page;
+            } else if ($page > 1)
+                $records_count = $lines_per_page;
+            $end_picklist = (is_array($this->picklist[$orderNumber]['lines']))?end($this->picklist[$orderNumber]['lines']):[];
+            if ($y == $records_count && $pick != $end_picklist && $page < $pages) {
+                $y = 0;
+                $page++;
+                ?>
+            </table>
+        </div>  
+        <div class="pdf">
+            <?php $header = $this->picklist['header']; ?>  
+
+            <table  class='picking width_100' style="font-family: sans-serif;">                        
+                <tr>
+                    <th width="40">Qty</th>
+                    <th width="40">Type</th>
+                    <th width="120">Item Number</th>
+                    <th width="300">Item Desc</th>
+                    <th width="40">Price</th>
+                    <th width="40">Total</th>
+                </tr>
+                <?php
+            }
+        }
+        ?>
+    </table>
+</div>     
+<div class="pdfrow bottom width_100" style="height: 130px;">
+    <table class="picking width_100"  style='margin-left:0px; margin-right: 30px; top: 0px;'>
+        <tr>
+            <td width="68%" style="text-align: left;font-size: 14px;">
+                <?php if ($this->picklist['header']['inv_notes'] != '') { ?>
+                    <b>Notes:</b><br>
+                    <?php echo $this->picklist['header']['inv_notes']; ?>
+                <?php } ?>
+            </td>
+            <td width="40%"  style="text-align: left;font-size: 16px;">
+               <table class="picking width_100" style="width: 330px; height: 100%; top: 0px;">
+                    <tr>
+                        <td colspan="2">
+                            <b>Total Lines </b> <?php echo $total_lines; ?>&nbsp;&nbsp;<b> Qty </b> <?php echo number_format($total_units); ?>
+                        </td>
+                    </tr>
+                    
+                    <?php if ((float) $this->picklist['header']['inv_credits'] > 0) { ?>
+                    <tr>
+                        <td>
+                            <b>Invoice Credits:</b> 
+                        </td>
+                        <td>$<?php echo number_format($this->picklist['header']['inv_credits'], 2); ?></td>
+                    </tr>
+                    <?php } ?>
+                    
+                    <tr>
+                        <td>
+                            <b>Invoice Sub Total:</b> 
+                        </td>
+                        <td>$<?php echo number_format($total_price, 2); ?></td>
+                    </tr>
+                
+                    <?php if ((float) $this->picklist['header']['inv_outstanding'] > 0) { ?>
+                    <tr>
+                        <td>
+                            <b>Additional Charges:</b>
+                        </td>
+                        <td>$<?php echo number_format($this->picklist['header']['inv_outstanding'], 2); ?></td>
+                    </tr>
+                    <?php } ?>
+                    
+                    <?php if ((float) $this->picklist['header']['inv_shipping'] > 0) { ?>
+                    <tr>
+                        <td>
+                            <b>Shipping Charges:</b>
+                        </td>
+                        <td>$<?php echo number_format($this->picklist['header']['inv_shipping'], 2); ?></td>
+                    </tr>
+                    <?php } ?>
+                    
+                    <?php if ((float) $this->picklist['header']['inv_payments'] > 0) { ?>
+                    <tr>
+                        <td>
+                            <b>Paid:</b>
+                        </td>
+                        <td>$<?php echo number_format($this->picklist['header']['inv_payments'], 2); ?></td>
+                    </tr>
+                    <?php } ?>
+                    
+                    <?php if ((float) $this->picklist['header']['inv_discount'] > 0) { ?>
+                    <tr>
+                        <td>
+                            <b>Invoice Discount:</b>
+                        </td>
+                        <td>$<?php echo number_format($this->picklist['header']['inv_discount'], 2); ?></td>
+                    </tr>
+                    <?php } ?>
+                    
+                    <?php if ((float) $this->picklist['header']['inv_cca'] > 0) { ?>
+                    <tr>
+                        <td>
+                            <b>CC Charges:</b>
+                        </td>
+                        <td>$<?php echo number_format($this->picklist['header']['inv_cca'], 2); ?></td>
+                    </tr>
+                    <?php } ?>
+                    
+
+                    
+                    <?php $inv_final_total = $total_price 
+                                            - $this->picklist['header']['inv_discount'] 
+                                            + $this->picklist['header']['inv_shipping']
+                                            + $this->picklist['header']['inv_outstanding']
+                                            - $this->picklist['header']['inv_payments']
+                                            + $this->picklist['header']['inv_cca']
+                            ; ?>
+                    
+                    <tr>
+                        <td>
+                            <b>Invoice Total:</b></b>
+                        </td>
+                        <td>$<?php echo number_format($inv_final_total, 2); ?></td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</div>

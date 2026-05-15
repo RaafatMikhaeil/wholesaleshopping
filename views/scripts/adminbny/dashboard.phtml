@@ -1,0 +1,22 @@
+	
+    <!-- load interface -->
+    <?php echo $this->partial('/partials/index/tasks_full.phtml', array(
+		"title"                => $this->title,
+		"messages"             => $this->messages,
+		"page_groups"          => $this->page_groups,
+		"user_info"            => $this->user_info,
+		"paginator"            => $this->paginator,
+		"search"               => $this->search,
+		"filter"               => $this->filter,
+		"user_tasks"           => $this->user_tasks,
+		"complaints"           => $this->complaints,
+		"complaint_search"     => $this->complaint_search,
+		"complaint_filter"     => $this->complaint_filter,
+		"user_complaint_tasks" => $this->user_complaint_tasks,
+		"notifications"        => $this->notifications,
+		"user_id"              => $this->user_id,
+		"show_full"            => false,
+		"show_full_complaint"  => false,
+		"show_full_stability"  => false,
+		"show_full_calltag"    => false
+	)); ?>

@@ -1,0 +1,53 @@
+<!-- BREAD CRUMB NAVIGATOR PANEL -->
+<div class="bread_crumb_module">
+    <div class="bread_crumb">	
+        <ul>
+            <li><a href="/dashboard">Home</a></li>
+            <li><?php echo $this->title; ?></li>
+        </ul>
+    </div><!-- end bread_crumb div -->
+</div><!-- end bread_crumb_module div -->
+<div class="clear"></div>
+<!-- SYSTEM MESSAGES -->
+<?php if (is_array($this->messages) && count($this->messages) > 0) { ?>
+    <div id="messages">
+        <ul>
+            <?php foreach ($this->messages as $message) { ?>
+                <li><?php echo $message; ?></li>
+            <?php } ?>
+        </ul>
+    </div><!-- end messages div -->
+<?php } ?>
+<div class="form_options">
+    [ <a href="/wholesale/paymenttype">Add New Payment Method</a> ]
+</div>
+<table class="variables_table" width="950" style="margin: 0 auto; border: 1px solid lightgray;">
+    <thead>
+        <tr>
+            <th colspan="8" class="top-header">Payment Types Manager</th>
+        </tr>
+        <tr> 
+            <th width="10" class="form-header">ID</th>
+            <th width="" class="form-header">Type</th>
+<!--            <th width="10" class="form-header"></th>-->
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+        $row = 0;
+        $accessSleev = Utility_Functions::canUserAccess("/wholesale/paymenttype");
+        foreach ($this->entries as $entry) {    $row++;?>
+            <tr class="row_<?php echo $row % 2; ?>">
+                <td><?php echo $entry['payment_type_id']; ?></td>
+                <td><?php echo $entry['payment_type']; ?></td>
+<!--                <td>
+                    <?php //if ($accessSleev) { ?>
+                        <a href="/wholesale/paymenttype/id/<?php echo $entry['payment_type_id']; ?>">
+                            <img title="Edit Payment Method" src="/images/icons/famfam/pencil.png" />
+                        </a>
+                    <?php // } ?>
+                </td>-->
+            </tr>
+        <?php } ?>
+    </tbody>
+</table>

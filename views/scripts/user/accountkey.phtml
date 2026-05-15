@@ -1,0 +1,70 @@
+<!-- BREAD CRUMB NAVIGATOR PANEL -->
+<div class="bread_crumb_module">
+    <div class="bread_crumb">	
+        <ul>
+            <li><a href="/dashboard">Home</a></li>
+            <li><a href="/user/accountkeys">Account Keys</a></li>
+            <li><?php echo $this->title; ?></li>
+        </ul>
+    </div><!-- end bread_crumb div -->
+</div><!-- end bread_crumb_module div -->
+<div class="clear"></div>
+
+<!-- SYSTEM MESSAGES -->
+<?php if (is_array($this->messages) && count($this->messages) > 0) { ?>
+    <div id="messages">
+        <ul>
+            <?php foreach ($this->messages as $message) { ?>
+                <li><?php echo $message; ?></li>
+            <?php } ?>
+        </ul>
+    </div><!-- end messages div -->
+<?php } ?>
+
+<div class="form_options">[ <a href="/user/accountkeys">Cancel</a> ]</div>
+
+<form enctype="multipart/form-data" method="post" action="">
+    <?php echo $this->form->ak_id; ?>
+    <table id="form">
+        <tr>
+            <td colspan=2 class="top-header">User Manager</td>
+        </tr>
+        <tr>
+            <td class="form-header">Atlas Username</td>
+            <td class="form-field">
+                <?php
+                if ($this->form->getValue('ak_id') == '')
+                    echo $this->form->a_username;
+                else {
+                    echo $this->form->a_username->getvalue();
+                    ?>
+                    <input type="hidden" name="a_username" value="<?php echo $this->form->a_username->getvalue(); ?>"/>
+                <?php } ?>
+            </td>
+        </tr>
+        <tr>
+            <td class="form-header">JC Username</td>
+            <td class="form-field"><?php echo $this->form->jc_username; ?></td>
+        </tr>
+        <tr>
+            <td class="form-header">JF Username</td>
+            <td class="form-field"><?php echo $this->form->jf_username; ?></td>
+        </tr>
+        <tr>
+            <td class="form-header">BM Username</td>
+            <td class="form-field"><?php echo $this->form->bm_username; ?></td>
+        </tr>
+        </tr>
+        <tr>
+            <td class="form-header">M3 Username</td>
+            <td class="form-field"><?php echo $this->form->m3_username; ?></td>
+        </tr>
+        <tr>
+            <td class="form-header">Type</td>
+            <td class="form-field"><?php echo $this->form->type; ?></td>
+        </tr>
+        <tr>
+            <td colspan=2 class="form-submit"><?php echo $this->form->submit; ?></td>
+        </tr>
+    </table>
+</form>

@@ -1,0 +1,158 @@
+<!-- BREAD CRUMB NAVIGATOR PANEL -->
+<div class="bread_crumb_module">
+    <div class="bread_crumb">	
+        <ul>
+            <li><a href="/dashboard">Home</a></li>
+            <li><?php echo $this->title; ?></li>
+        </ul>
+    </div><!-- end bread_crumb div -->
+</div><!-- end bread_crumb_module div -->
+<div class="clear"></div>
+
+<!-- SYSTEM MESSAGES -->
+<?php if (is_array($this->messages) && count($this->messages) > 0) { ?>
+    <div id="messages">
+        <ul>
+            <?php foreach ($this->messages as $message) { ?>
+                <li><?php echo $message; ?></li>
+            <?php } ?>
+        </ul>
+    </div><!-- end messages div -->
+<?php } 
+$accessSleev = Utility_Functions::canUserAccess("/wholesale/category");?>
+<div class="form_options">
+    [ <a href="/wholesale/category">Add New Category</a> ]
+</div>
+<table class="variables_table" width="950" style="margin: 0 auto; border: 1px solid lightgray;">
+    <thead>
+        <tr>
+            <th colspan="10" class="top-header">Active Categories</th>
+        </tr>
+        <tr>
+            <th width="10" class="form-header"></th>
+            <th width="180" class="form-header">Name</th>
+            <th width="180" class="form-header">Desc</th>
+            <th width="200" class="form-header">Parent</th>
+            <th width="70" class="form-header">Display</th>
+            <th width="70" class="form-header">Active</th>
+            <th width="10" class="form-header"></th>
+            <th width="10" class="form-header"></th>
+            <th width="10" class="form-header"></th>
+             <th width="10" class="form-header"></th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+        $row = 0;
+        foreach ($this->entries as $entry) {
+            $row++; ?>
+            <tr class="row_<?php echo $row % 2; ?>">
+                <td><?= $row ?></td>
+                <td><?php echo $entry['cat_name']; ?></td>
+                <td><?php echo $entry['cat_desc']; ?></td>
+                <td><?php echo $this->cats[$entry['cat_parent']];  ?></td>
+                <td><?php echo ($entry['cat_display'])?'YES':'NO'; ?></td>
+                <td><?php echo ($entry['cat_status'])?'YES':'NO'; ?></td>
+                <td>
+                    <?php if ($accessSleev) { ?>
+                        <a href="/wholesale/categoryproducts/id/<?php echo $entry['cat_id']; ?>">
+                            <img src="/images/icons/famfam/application_add.png" title="Assign Products" />
+                        </a>
+                    <?php } ?>
+                </td>
+                <td>
+                    <?php if ($accessSleev) { ?>
+                        <?php if( $entry['cat_status'] == 1) { ?>
+                            <a class="deactivate" href="/wholesale/catstatus/id/<?php echo $entry['cat_id']; ?>/val/0">
+                                    <img src="/images/icons/famfam/delete.png" title="Deactivate Category" />
+                            </a>
+                        <?php } else { ?>
+                            <a class="activate" href="/wholesale/catstatus/id/<?php echo $entry['cat_id']; ?>/val/1">
+                                    <img src="/images/icons/famfam/add.png" title="Activate Category" />
+                            </a>
+                        <?php } ?>
+                    <?php } ?>
+                </td>
+                <td>
+                    <?php if ($accessSleev) { ?>
+                        <a href="/wholesale/category/id/<?php echo $entry['cat_id']; ?>">
+                            <img title="Edit Category" src="/images/icons/famfam/pencil.png" />
+                        </a>
+                    <?php } ?>
+                </td>
+                <td>
+                    <?php if ($accessSleev) { ?>
+                        <a href="/wholesale/catproduct/id/<?php echo $entry['cat_id']; ?>">
+                            <img title="Show Products" src="/images/icons/famfam/database_go.png" />
+                        </a>
+                    <?php } ?>
+                </td>
+
+            </tr>
+        <?php } ?>
+    </tbody>
+</table>
+    
+    
+    
+<table class="variables_table" width="950" style="margin: 0 auto; border: 1px solid lightgray;">
+    <thead>
+        <tr>
+            <th colspan="9" class="top-header">InActive Categories</th>
+        </tr>
+        <tr>
+            <th width="10" class="form-header"></th>
+            <th width="180" class="form-header">Name</th>
+            <th width="180" class="form-header">Desc</th>
+            <th width="200" class="form-header">Parent</th>
+            <th width="70" class="form-header">Display</th>
+            <th width="70" class="form-header">Active</th>
+            <th width="10" class="form-header"></th>
+            <th width="10" class="form-header"></th>
+            <th width="10" class="form-header"></th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+        $row = 0;
+        foreach ($this->entries1 as $entry) {
+            $row++; ?>
+            <tr class="row_<?php echo $row % 2; ?>">
+                <td><?= $row ?></td>
+                <td><?php echo $entry['cat_name']; ?></td>
+                <td><?php echo $entry['cat_desc']; ?></td>
+                <td><?php echo $this->cats[$entry['cat_parent']];  ?></td>
+                <td><?php echo ($entry['cat_display'])?'YES':'NO'; ?></td>
+                <td><?php echo ($entry['cat_actve'])?'YES':'NO'; ?></td>
+                <td>
+                    <?php if ($accessSleev) { ?>
+                        <a href="/wholesale/categoryproducts/id/<?php echo $entry['cat_id']; ?>">
+                            <img src="/images/icons/famfam/application_add.png" title="Category Products" />
+                        </a>
+                    <?php } ?>
+                </td>
+                <td>
+                    <?php if ($accessSleev) { ?>
+                        <?php if( $entry['prod_status'] == 1) { ?>
+                            <a class="deactivate" href="/wholesale/catstatus/id/<?php echo $entry['cat_id']; ?>/val/0">
+                                    <img src="/images/icons/famfam/delete.png" title="Deactivate Category" />
+                            </a>
+                        <?php } else { ?>
+                            <a class="activate" href="/wholesale/catstatus/id/<?php echo $entry['cat_id']; ?>/val/1">
+                                    <img src="/images/icons/famfam/add.png" title="Activate Category" />
+                            </a>
+                        <?php } ?>
+                    <?php } ?>
+                </td>
+                <td>
+                    <?php if ($accessSleev) { ?>
+                        <a href="/wholesale/category/id/<?php echo $entry['cat_id']; ?>">
+                            <img title="Edit Category" src="/images/icons/famfam/pencil.png" />
+                        </a>
+                    <?php } ?>
+                </td>
+
+            </tr>
+        <?php } ?>
+    </tbody>
+</table>

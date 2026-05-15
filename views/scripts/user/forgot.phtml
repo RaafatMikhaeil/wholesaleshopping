@@ -1,0 +1,29 @@
+<div class="page_title">Forgot Password?</div>
+
+<!-- SYSTEM MESSAGES -->
+<?php if (is_array($this->messages) && count($this->messages) > 0) { ?>
+    <div id="messages">
+        <ul>
+            <?php foreach ($this->messages as $message) { ?>
+                <li><?php echo $message; ?></li>
+            <?php } ?>
+        </ul>
+    </div><!-- end messages div -->
+<?php } ?>
+
+
+<div class="container">
+    <section id="content">
+        <form enctype="multipart/form-data" method="post" action="">
+            <div>
+                <input type="text" name="username" id="username" maxlength="65" class="form-element" size="30" required="required" placeholder="Usename">
+            </div>
+            <div>
+                <input type="text" name="email" id="email" maxlength="65" class="form-element" size="30" required="required" placeholder="Email">
+            </div>
+            <div>
+                <?php echo str_replace("Login", "Reset", $this->form->submit); ?>
+            </div>
+        </form>
+    </section>
+</div>

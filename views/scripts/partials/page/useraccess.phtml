@@ -1,0 +1,35 @@
+
+<div id="usergroup_pagegroups"  class="records_list ua_list" >
+	<ul class="page_groups">
+    	<?php foreach( $this->records as $page_group ) { ?>
+        	<li>
+            	<a href="#" class="expand_list" id="<?php echo $page_group['permission_group_id']; ?>"
+                	title="expand and view the contents of this page group">
+                    <div class="pagegroup_title">
+                        <div class="left_end"></div>
+                        <div class="label"><?php echo $page_group['permission_group_title']; ?></div>
+                        <div class="right_end"></div>
+                        <div class="clear"></div>
+                    </div>
+                </a>
+                <ul class="pages" id="pages_<?php echo $page_group['permission_group_id']; ?>">
+                	<li>
+                    	<table class="inner_page_table">
+                        	<tbody>
+                            	<?php $i=0;
+                                foreach( $this->userGroupPages as $page ) {   ?>
+                                    <?php if( $page['permission_group_id'] == $page_group['permission_group_id'] ) { ?>
+                                        <tr class="row_<?php echo $i%2; ?>" id="<?php echo $page['permission_group_id']; ?>">
+                                            <td><?php echo $page['page_name']; ?></td>
+                                            <td><?php echo $page['path']; ?></td>
+                                        </tr>
+                                    <?php ++$i; } ?>
+                                <?php  } ?>
+                            </tbody>
+                    	</table>
+                	</li>
+                </ul>
+            </li>
+    	<?php } ?>
+	</ul>
+</div>

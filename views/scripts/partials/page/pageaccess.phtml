@@ -1,0 +1,58 @@
+<div id="usergroup_pagegroups" class="records_list pa_list" >	
+   
+    <ul class="page_groups">
+    <?php $users = array();
+        foreach( $this->records as $page_group ) { ?>
+            <li>
+            <a href="#" class="expand_list" id="<?php echo $page_group['permission_group_id']; ?>"
+                    title="expand and view the contents of this page group">
+                <div class="pagegroup_title">
+                    <div class="left_end"></div>
+                    <div class="label"><?php echo $page_group['permission_group_title']; ?></div>
+                    <div class="right_end"></div>
+                    <div class="clear"></div>
+                </div>
+            </a>
+            <ul class="pages" id="pages_<?php echo $page_group['permission_group_id']; ?>">
+                    <li>
+                    <table class="inner_page_table">
+                            <tbody>
+                            <?php $i=0;
+                            foreach( $page_group['user'] as $user ) {
+                                if (!array_key_exists($user['user_id'],$users)) {
+                                    $users[$user['user_id']] = $user['name'];
+                                }?>
+                                    <tr class="row_<?php echo $i%2; ?>" id="<?php echo $user['user_id']; ?>">
+                                        <td><?php echo $user['user_id']; ?></td>
+                                        <td><?php echo $user['name']; ?></td>
+                                    </tr>
+                                <?php ++$i;  ?>
+                            <?php  } ?>
+                        </tbody>
+                    </table>
+                    </li>
+            </ul>
+        </li>
+    <?php } ?>
+    </ul>
+    
+    <table class="page_group_table">
+        <tr>
+            <td colspan=8 class="top-header">User list</td>
+        </tr>
+        <tr>
+            <td class="form-header">#</td>
+            <td class="form-header">Name</td>
+        </tr>
+        <tbody>
+            <?php $row = 0; $i = 1; ?>
+            <?php foreach( $users as $user ) { ?>
+                <tr class="row_<?php echo $row%2; ?>">
+                    <td><?php echo $i; ?></td>
+                    <td><?php echo $user; ?></td>
+                </tr>
+                <?php ++$row; ++$i; ?>
+            <?php } ?>
+        </tbody>
+    </table><!-- end task_table -->
+</div>

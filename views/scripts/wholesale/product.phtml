@@ -1,0 +1,151 @@
+<!-- BREAD CRUMB NAVIGATOR PANEL -->
+<div class="bread_crumb_module">
+    <div class="bread_crumb">	
+        <ul>
+            <li><a href="/dashboard">Home</a></li>
+            <li><?php echo $this->title; ?></li>
+        </ul>
+    </div><!-- end bread_crumb div -->
+</div><!-- end bread_crumb_module div -->
+<div class="clear"></div>
+
+<!-- SYSTEM MESSAGES -->
+<?php if (is_array($this->messages) && count($this->messages) > 0) { ?>
+    <div id="messages">
+        <ul>
+            <?php foreach ($this->messages as $message) { ?>
+                <li><?php echo $message; ?></li>
+            <?php } ?>
+        </ul>
+    </div><!-- end messages div -->
+<?php } ?>
+<?php $cat_id = $this->form->cat_id->getValue(); ?>
+<div class="form_options">
+    [ <a href="/wholesale/products">Jump to Active Products</a> ]
+    [ <a href="/wholesale/inactiveproducts">Jump to InActive Products</a> ]
+    [ <a href="/wholesale/categories">Jump to All Categories</a> ]
+    <?php if($cat_id){ ?>
+    [ <a href="/wholesale/catproduct/id/<?=$cat_id?>">Jump to Product Category</a> ]
+    <?php } ?>
+</div>
+
+<form method="post" action="" enctype="multipart/form-data"  class="form_submit show-loader">
+    <?php echo $this->form->prod_id; ?>
+    <table id="form" width="800">
+        <tr>
+            <td colspan=2 class="top-header">Product Manager</td>
+        </tr>
+        <tr>
+            <td class="form-header">Category</td>
+            <td class="form-field">
+                <div class="frmSearch" style="width:405px;">
+                    <input autocomplete="off" type="text" class="search-box" id="search-box_cat" value="<?=$this->categories[$cat_id]?>" rel="0"  style="width:350px;"/>
+                    <div class="suggesstion-box" id="suggesstion-box_cat"></div>
+                </div>
+                <input type="hidden" name="cat_id" value="<?=$cat_id?>" />
+            </td>
+        </tr>
+        <tr>
+            <td class="form-header">Desc</td>
+            <td class="form-field"><?php echo $this->form->prod_desc; ?></td>
+        </tr>
+        <tr>
+            <td class="form-header">Cost Price</td>
+            <td class="form-field"><?php echo $this->form->prod_cost; ?></td>
+        </tr>
+        <tr>
+            <td class="form-header">Sales Price</td>
+            <td class="form-field"><?php echo $this->form->prod_sale; ?></td>
+        </tr>
+        <tr>
+            <td class="form-header">Product Inventory</td>
+            <td class="form-field"><?php echo $this->form->prod_name; ?></td>
+        </tr>
+        <tr>
+            <td class="form-header" width="220">Active</td>
+            <td class="form-field"><?php echo $this->form->prod_status; ?></td>
+        </tr>
+        <tr>
+            <td class="form-header" width="220">Display Catalog</td>
+            <td class="form-field"><?php echo $this->form->prod_display; ?></td>
+        </tr>
+        <tr>
+            <td class="form-header" width="220">Image</td>
+            <td class="form-field">
+                <?php echo $this->form->prod_image; ?>
+                    <div style="float:right">
+                    <?php
+                    if(!empty(trim($this->values['prod_image']))){
+                        $folder_path = Zend_Registry::get("full_url")."/uploads/products";
+                        echo "<a target='_blank' href='$folder_path/{$this->values['prod_image']}'>"
+                        . "<img src='$folder_path/sm_{$this->values['prod_image']}'/>"
+                        . "</a>";
+                    }
+                    ?>
+                    </div>
+                </td>
+        </tr>
+        
+        <tr>
+            <td class="form-header" width="220">Code</td>
+            <td class="form-field"><?php echo $this->form->prod_code; ?></td>
+        </tr>
+        
+        <tr>
+            <td class="form-header" width="220">Notes</td>
+            <td class="form-field">
+                <?php $text = ($this->form->prod_id->getValue())?'':'New Product'; ?>
+                <textarea id="id" name="notes" rows="5" cols="10"><?=$text?></textarea>
+            </td>
+        </tr>
+        
+        <tr>
+            <td colspan=2 class="form-submit"><?php echo $this->form->submit; ?></td>
+        </tr>
+    </table>
+</form>
+
+        <?php
+        if (is_array($this->logs) && count($this->logs) > 0) {
+            $column_headers = array_keys($this->logs[0]);
+            $headers = '';
+            $col_count = 0;
+            foreach ($column_headers as $header) {
+                if (!is_numeric($header)) {
+                    $col_count++;
+                    $headers .= '<td class="table-header">' . $header . '</td>';
+                }
+            }
+            ?>
+            <table class='report_table'>
+                <thead>
+                    <tr>
+                        <td colspan="<?php echo $col_count+1; ?>" class="top-header">Product Log</td>
+                    </tr>
+                    <tr>
+                        <?php echo $headers; ?>
+                        <td class="table-header"></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($this->logs as $record) { ?>
+                        <tr>
+                            <?php
+                            $prod_id = $record['RecordId'];
+                            $entry_id = $record['EntryId'];
+                            foreach ($record as $key => $value) {
+                                if (!is_numeric($key)) {
+                                    echo '<td class="table-line">' . $value . '</td>';
+                                }
+                            }
+                            ?>
+                            <td style="text-align: center;">
+                                <a onclick="return confirm('Are you sure you want to delete this log?')" href="/wholesale/voidlog/id/<?=$entry_id?>/location/product/recid/<?=$prod_id?>">
+                                    <img width="" title="Delete Log" src="/images/icons/famfam/remove.png" />
+                                </a>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
+        <?php } ?>

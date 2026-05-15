@@ -1,0 +1,79 @@
+<!-- BREAD CRUMB NAVIGATOR PANEL -->
+<div class="bread_crumb_module">
+	<div class="bread_crumb">	
+		<ul>
+			<li><a href="/dashboard">Home</a></li>
+			<li><?php echo $this->title; ?></li>
+		</ul>
+	</div><!-- end bread_crumb div -->
+</div><!-- end bread_crumb_module div -->
+<div class="clear"></div>
+
+<!-- SYSTEM MESSAGES -->
+<?php if( is_array($this->messages) && count($this->messages) > 0 ) { ?>
+	<div id="messages">
+		<ul>
+		<?php foreach( $this->messages as $message ) { ?>
+			<li><?php echo $message; ?></li>
+		<?php } ?>
+		</ul>
+	</div><!-- end messages div -->
+<?php } ?>
+
+<?php echo $this->notifications; ?>
+
+<div class="form_options">[ <a href="/notifications/notification">Create New Notification</a> ]</div>
+
+<table class="notification_table">
+	<tr>
+    	<td colspan=5 class="top-header">Notification Manager</td>
+    </tr>
+    <tr>
+        <td width="300" class="form-header">Message Preview</td>
+        <td width="150" class="form-header">Created By</td>
+        <td width="150" class="form-header">Created On</td>
+        <td width="75" class="form-header">Status</td>
+        <td width="50" class="form-header"></td>
+    </tr>
+    <tbody>
+    	<?php $row = 0;
+        if(Utility_Functions::canUserAccess("/notifications/notification")) $accessNotification = true;
+        else $accessNotification = false;
+        if(Utility_Functions::canUserAccess("/notifications/notificationassignments")) $accessNotificationAssignments = true;
+        else $accessNotificationAssignments = false;
+        if(Utility_Functions::canUserAccess("/notifications/notificationdeactivate")) $accessNotificationDeActivate = true;
+        else $accessNotificationDeActivate = false;
+        if(Utility_Functions::canUserAccess("/notifications/notificationactivate")) $accessNotificationActivate = true;
+        else $accessNotificationActivate = false;
+        foreach( $this->notifications as $notification ) { ?>
+        	<tr class="row_<?php echo $row%2; ?>" id="<?php echo $notification['notification_id']; ?>">
+            	<td><?php echo substr(strip_tags($notification['message']), 0, 50)."..."; ?></td>
+                <td><?php echo $notification['name']; ?></td>
+                <td><?php echo date("m/d/Y H:i:s", strtotime($notification['timestamp'])); ?></td>
+                <td><?php echo ( $notification['is_active'] == 1 ) ? "Active":"Inactive"; ?></td>
+                <td>
+                	<?php if( $accessNotification ) { ?>
+                        <a href="/notifications/notification/id/<?php echo $notification['notification_id']; ?>">
+                            <img title="edit the selected notification's information" src="/images/icons/famfam/pencil.png" />
+                        </a>
+                    <?php } ?>
+                    <?php if( $accessNotificationAssignments ) { ?>
+                        <a href="/notifications/notificationassignments/id/<?php echo $notification['notification_id']; ?>">
+                            <img title="assign groups to this notification" src="/images/icons/famfam/group_add.png" />
+                        </a>
+                    <?php } ?>
+                    <?php if( $notification['is_active'] == 1 && $accessNotificationDeActivate ) { ?>
+                        <a class="unit_deactivate" href="/notifications/notificationdeactivate/page/<?php echo $this->page; ?>/id/<?php echo $notification['notification_id']; ?>">
+                            <img title="deactivate the selected notification" src="/images/icons/famfam/delete.png" />
+                        </a>
+                    <?php } else if ( $notification['is_active'] == 0 && $accessNotificationActivate ) { ?>
+                        <a class="unit_activate" href="/notifications/notificationactivate/page/<?php echo $this->page; ?>/id/<?php echo $notification['notification_id']; ?>">
+                            <img title="activate the selected notification" src="/images/icons/famfam/add.png" />
+                        </a>
+                    <?php } ?>
+                </td>
+            </tr>
+            <?php ++$row; ?>
+		<?php } ?>
+	</tbody>
+</table>

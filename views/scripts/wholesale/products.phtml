@@ -1,0 +1,86 @@
+<!-- BREAD CRUMB NAVIGATOR PANEL -->
+<div class="bread_crumb_module">
+    <div class="bread_crumb">	
+        <ul>
+            <li><a href="/dashboard">Home</a></li>
+            <li><?php echo $this->title; ?></li>
+        </ul>
+    </div><!-- end bread_crumb div -->
+</div><!-- end bread_crumb_module div -->
+<div class="clear"></div>
+
+<!-- SYSTEM MESSAGES -->
+<?php if (is_array($this->messages) && count($this->messages) > 0) { ?>
+    <div id="messages">
+        <ul>
+            <?php foreach ($this->messages as $message) { ?>
+                <li><?php echo $message; ?></li>
+            <?php } ?>
+        </ul>
+    </div><!-- end messages div -->
+<?php } ?>
+<div class="form_options">
+    <?php if($this->action == 'showcost'){ ?>
+        [ <a href="/wholesale/products/act/hidecost">Hide Cost</a> ]
+    <?php }else{ ?>
+        [ <a href="/wholesale/products/act/showcost">Show Cost</a> ]
+    <?php } ?>
+        
+    [ <a href="/wholesale/product">Add New Product</a> ]
+</div>
+<table class="variables_table" width="950" style="margin: 0 auto; border: 1px solid lightgray;">
+    <thead>
+        <tr>
+            <th colspan="9" class="top-header">Active Products</th>
+        </tr>
+        <tr>
+            <th width="10" class="form-header"></th>
+            <th width="300" class="form-header">Desc</th>
+            <th width="300" class="form-header">Category</th>
+            <?php if($this->action == 'showcost'){ ?><th width="100" class="form-header">Cost Price</th><?php } ?>
+            <th width="100" class="form-header">Sale Price</th>
+            <th width="100" class="form-header">Code</th>
+            <th width="100" class="form-header">Inventory</th>
+            <th width="10" class="form-header"></th>
+            <th width="10" class="form-header"></th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+        $row = 0;
+        $accessSleev = Utility_Functions::canUserAccess("/wholesale/product");
+        foreach ($this->entries as $entry) {
+            $row++; ?>
+            <tr class="row_<?php echo $row % 2; ?>">
+                <td><?= $row ?></td>
+                <td><?php echo $entry['prod_desc']; ?></td>
+                <td><?php echo $this->cats[$entry['cat_id']];  ?></td>
+                <?php if($this->action == 'showcost'){ ?><td><?php echo $entry['prod_cost']; ?></td><?php } ?>
+                <td><?php echo $entry['prod_sale']; ?></td>
+                <td><?php echo $entry['prod_code']; ?></td>
+                <td><?php echo $entry['prod_name']; ?></td>
+                <td>
+                    <?php if ($accessSleev) { ?>
+                        <?php if( $entry['prod_status'] == 1) { ?>
+                            <a class="prod_change_status" val="0" rel="<?php echo $entry['prod_id']; ?>" class="deactivate" href="/wholesale/productstatus/id/<?php echo $entry['prod_id']; ?>/val/0">
+                                    <img src="/images/icons/famfam/delete.png" title="Deactivate Product" />
+                            </a>
+                        <?php } else { ?>
+                            <a class="prod_change_status" val="1" rel="<?php echo $entry['prod_id']; ?>" class="activate" href="/wholesale/productstatus/id/<?php echo $entry['prod_id']; ?>/val/1">
+                                    <img src="/images/icons/famfam/add.png" title="Activate Product" />
+                            </a>
+                        <?php } ?>
+                    <?php } ?>
+                </td>
+                <td>
+                    <?php if ($accessSleev) { ?>
+                        <a href="/wholesale/product/id/<?php echo $entry['prod_id']; ?>">
+                            <img title="Edit Product" src="/images/icons/famfam/pencil.png" />
+                        </a>
+                    <?php } ?>
+                </td>
+
+            </tr>
+        <?php } ?>
+    </tbody>
+</table>

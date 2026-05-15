@@ -1,0 +1,141 @@
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div style="display:<?php
+        if (isset($_SESSION['showAlert'])) {
+            echo $_SESSION['showAlert'];
+        } else {
+            echo 'none';
+        } unset($_SESSION['showAlert']);
+        ?>" class="alert alert-success alert-dismissible mt-3">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong><?php
+                if (isset($_SESSION['message'])) {
+                    echo $_SESSION['message'];
+                } unset($_SESSION['showAlert']);
+                ?></strong>
+        </div>
+        <div class="table-responsive mt-2">
+            <table class="table table-bordered table-striped text-center">
+                <thead>
+                    <tr>
+                        <td colspan="7">
+                            <h4 class="text-center text-info m-0">Products in your cart!</h4>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>ID</th>
+                        <th>Image</th>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total Price</th>
+                        <th>
+                            <a href="/cart/action/clear/all" class="badge-danger badge p-1" onclick="return confirm('Are you sure want to clear your cart?');"><i class="fas fa-trash"></i>&nbsp;&nbsp;Clear Cart</a>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $grand_total = 0;
+                    foreach ($this->rows as $row) {
+                        if (file_exists(Zend_Registry::get("target_path") . "/uploads/products/" . $row['product_image']) && !empty($row['product_image'])) {
+                            $image = "/uploads/products/" . $row['product_image'];
+                        } else {
+                            $image = "/uploads/products/empty_img.png";
+                        }
+                        ?>
+                        <tr>
+                            <td><?= $row['id'] ?></td>
+                    <input type="hidden" class="pid" value="<?= $row['id'] ?>">
+                    <td>
+                        <img src="<?= $image ?>" width="50" />
+                    </td>
+                    <td>
+                        <?= $row['product_name'] ?>
+                    </td>
+                    <td>
+                        <i class="fas fa-dollar-sign"></i><?= number_format($row['product_price'], 2); ?>
+                    </td>
+                    <input type="hidden" class="pprice" value="<?= $row['product_price'] ?>">
+                    <td>
+                        <input type="number" class="form-control itemQty" value="<?= $row['qty'] ?>" style="width:75px;">
+                    </td>
+                    <td>
+                        <i class="fas fa-dollar-sign"></i><?= number_format($row['total_price'], 2); ?>
+                    </td>
+                    <td>
+                        <a href="/cart/action/remove/<?= $row['id'] ?>" class="text-danger lead" onclick="return confirm('Are you sure want to remove this item?');">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
+                    </td>
+                    </tr>
+                    <?php $grand_total += $row['total_price']; ?>
+                <?php } ?>
+                <tr>
+                    <td colspan="3">
+                        <a href="/cart" class="btn btn-success">
+                            <i class="fas fa-cart-plus"></i>&nbsp;&nbsp;Continue Shopping
+                        </a>
+                    </td>
+                    <td colspan="2">
+                        <b>Grand Total</b>
+                    </td>
+                    <td>
+                        <b><i class="fas fa-dollar-sign"></i><?= number_format($grand_total, 2); ?></b>
+                    </td>
+                    <td>
+                        <a href="/cart/checkout" class="btn btn-info <?= ($grand_total > 1) ? '' : 'disabled'; ?>">
+                            <i class="far fa-credit-card"></i>&nbsp;&nbsp;Checkout
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        // Change the item quantity
+        $(".itemQty").on('change', function () {
+            var $el = $(this).closest('tr');
+            var pid = $el.find(".pid").val();
+            var pprice = $el.find(".pprice").val();
+            var qty = $el.find(".itemQty").val();
+            var action = 'update_cart';
+            $.ajax({
+                url: '/cart/action',
+                method: 'post',
+                cache: false,
+                data: {
+                    qty: qty,
+                    pid: pid,
+                    pprice: pprice,
+                    action: action
+                },
+                success: function (response) {
+                    console.log(response);
+                    location.reload(true);
+                }
+            });
+
+        });
+
+        // Load total no.of items added in the cart and display in the navbar
+        load_cart_item_number();
+
+        function load_cart_item_number() {
+            $.ajax({
+                url: '/cart/action',
+                method: 'get',
+                data: {
+                    cartItem: "cart_item"
+                },
+                success: function (response) {
+                    $("#cart-item").html(response);
+                }
+            });
+        }
+    });
+</script>

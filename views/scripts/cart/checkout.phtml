@@ -1,0 +1,108 @@
+<?php $grand_total = $total_items = 0; ?>
+<div class="row justify-content-center">
+    <div class="col-lg-7 px-4 pb-4" id="order">
+        <div class="jumbotron p-3 mb-2 text-center">
+            <h4 class="text-center text-info p-2">Complete your order!</h4>
+<!--            <h6 class="lead"><b>Delivery Charge : </b>Free</h6>-->
+        </div>
+        <form action="" method="post" id="placeOrder">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Product</th>
+                      <th scope="col">Qty</th>
+                      <th scope="col">Price</th>
+                      <th scope="col">Total</th>
+                    </tr>
+                </thead>
+                <tbody
+                    <?php $i=0; foreach ($this->rows as $row) { $i++;?>
+                        <tr>
+                          <th scope="row"><?=$i?></th>
+                          <td><?=$row['product_name']?></td>
+                          <td><?=number_format($row['qty'])?></td>
+                          <td>$<?=number_format($row['product_price'], 2)?></td>
+                          <td>$<?=number_format($row['total_price'], 2)?></td>
+                        </tr>
+                        <?php 
+                            $grand_total += $row['total_price']; 
+                            $total_items += $row['qty'];
+                        } ?>
+                        <tr>
+                            <td scope="col" colspan="2" class="text-right font-weight-bold">Total</td>
+                            <td scope="col" class="font-weight-bold"><?=number_format($total_items)?></td>
+                            <td scope="col"></td>
+                            <td scope="col" class="font-weight-bold">$<?=number_format($grand_total, 2)?></td>
+                        </tr>
+                        <tr>
+                            <td colspan="5">
+                                <h5 class="text-center lead">Order Notes</h5>
+                                <div class="form-group">
+                                    <textarea name="notes" class="form-control" rows="3" cols="10" placeholder="Enter Notes Here..."></textarea>
+                                </div>
+                            </td>
+                        </tr>
+                </tbody>
+            </table>
+            <h5><b>Total Amount Payable : $</b><?= number_format($grand_total, 2) ?></h5>
+            <input type="hidden" name="products" value="<?= $allItems; ?>">
+            <input type="hidden" name="grand_total" value="<?= $grand_total; ?>">
+<!--            <div class="form-group">
+                <input type="text" name="name" class="form-control" placeholder="Enter Name" required>
+            </div>
+            <div class="form-group">
+                <input type="email" name="email" class="form-control" placeholder="Enter E-Mail" required>
+            </div>
+            <div class="form-group">
+                <input type="tel" name="phone" class="form-control" placeholder="Enter Phone" required>
+            </div>-->
+
+<!--            <h6 class="text-center lead">Select Payment Mode</h6>
+            <div class="form-group">
+                <select name="pmode" class="form-control">
+                    <option value="" selected disabled>-Select Payment Mode-</option>
+                    <option value="cod">Cash On Delivery</option>
+                    <option value="netbanking">Net Banking</option>
+                    <option value="cards">Debit/Credit Card</option>
+                </select>
+            </div>-->
+            <div class="form-group">
+                <input type="submit" name="submit" value="Place Order" class="btn btn-danger btn-block">
+            </div>
+        </form>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        // Sending Form data to the server
+        $("#placeOrder").submit(function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: '/cart/action',
+                method: 'post',
+                data: $('form').serialize() + "&action=order",
+                success: function (response) {
+                    $("#order").html(response);
+                }
+            });
+        });
+
+        // Load total no.of items added in the cart and display in the navbar
+        load_cart_item_number();
+
+        function load_cart_item_number() {
+            $.ajax({
+                url: '/cart/action',
+                method: 'get',
+                data: {
+                    cartItem: "cart_item"
+                },
+                success: function (response) {
+                    $("#cart-item").html(response);
+                }
+            });
+        }
+    });
+</script>
