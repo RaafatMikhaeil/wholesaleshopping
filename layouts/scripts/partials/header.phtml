@@ -1,0 +1,42 @@
+<?php
+$protocol   =   Zend_Registry::get("protocol");
+try {
+    if( Utility_Session::isSession() ) {
+        $permission_group_ids = Zend_Registry::get('permission_group_ids');
+        $user_id    =   Zend_Registry::get('user_id');
+        $valid      =   true;
+    } else {
+        $valid = false;
+    }
+} catch( Exception $e ) {
+    $valid = false;
+}
+?>
+<div class="logo_sphere">
+    <a href="/adminbny/dashboard"><img src="/images/atlas_sphere.png" /></a>
+</div><!-- end logo_sphere div -->
+
+<div class="logo_text">
+    <img src="/images/atlas_logo.png" width="200" />
+</div><!-- end logo_text div -->
+<?php if( $valid && $user_id != "" ) { ?>
+    <div class="secondary_nav_top">
+        Welcome <?php echo Zend_Registry::get('name'); ?>
+        &nbsp;&nbsp;|&nbsp;&nbsp;
+        <a href="/user/profile" >My Profile</a>
+        &nbsp;&nbsp;|&nbsp;&nbsp;
+        <a href="/adminbnylogout">Log Out</a>
+    </div><!-- end secondary_nav_top div -->
+    
+    <div class="secondary_nav_bottom">
+        <a class="nav_extra_btn" href="/adminbny/spolicy">
+        	<div class="icon"><img src="/images/icons/famfam/lock.png" /></div>
+            <div class="label">Policy</div>
+        </a>
+        <a class="nav_extra_btn" href="/adminbny/dashboard">
+        	<div class="icon"><img src="/images/icons/famfam/color_swatch.png" /></div>
+            <div class="label">Dashboard</div>
+        </a>
+        <div class="clear"></div>
+	</div><!-- end secondary_nav_bottom div -->
+<?php } ?>

@@ -1,0 +1,237 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="author" content="Sahil Kumar">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>BNY Shopping Cart</title>
+        <script src="/lightbox/dist/js/lightbox-plus-jquery.min.js "></script>
+        <script src='/assets/js/jquery.min.js'></script>
+        <script src='/assets/js/bootstrap.min.js'></script>
+        <link rel='stylesheet' href='/assets/css/bootstrap.min.css' />
+        <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css' />
+        <link rel="stylesheet" href="/lightbox/dist/css/lightbox.min.css">
+        <link rel="icon"          href="<?php echo $this->links_icon; ?>" type="image/x-icon" />
+        <link rel="shortcut icon" href="<?php echo $this->links_shortcut; ?>" type="image/x-icon" />
+        <link rel="image_src"     href="<?php echo $this->links_image; ?>" />
+<meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+        <style>
+            .modal-header, .close {
+                background-color: #5cb85c;
+                color:white !important;
+                text-align: center;
+                font-size: 30px;
+            }
+            .modal-footer {
+                background-color: #f9f9f9;
+            }
+
+.dropdown-menu li {
+position: relative;
+}
+.dropdown-menu .dropdown-submenu {
+display: none;
+position: absolute;
+left: 100%;
+top: -7px;
+}
+.dropdown-menu .dropdown-submenu-left {
+right: 100%;
+left: auto;
+}
+.dropdown-menu > li:hover > .dropdown-submenu {
+display: block;
+}
+
+        </style>
+        <script type="text/javascript">
+        $(document).ready(function () {
+let dropdowns = document.querySelectorAll('.dropdown-toggle');
+dropdowns.forEach((dd)=>{
+    dd.addEventListener('mouseover', function (e) {
+        var el = this.nextElementSibling
+        el.style.display = el.style.display==='block'?'none':'block'
+    })
+    dd.addEventListener('mouseout', function (e) {
+        var el = this.nextElementSibling
+        //el.style.display = el.style.display==='block'?'block':'none'
+    })
+});
+
+$('li.dropdown').on('mouseleave', function(e) {
+    $(this).next('ul').hide();
+    e.stopPropagation();
+});
+});
+        </script>
+    </head>
+<?php
+        $mapper = new Atlas_Model_ProdsCategoriesMapper();
+        $categories = $mapper->buildCategoryTree3();
+?>
+    <body>
+        
+        <!-- Navbar start -->
+        <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
+            <a class="navbar-brand" href="/cart/index"><i class="fas fa-store"></i>&nbsp;&nbsp;BNY STORE</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                <ul class="navbar-nav mr-auto">        
+                    <?= $categories ?>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/cart/index"><i class="fas fa-mobile-alt mr-2"></i>Products</a>
+                    </li>
+<!--                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-th-list mr-2"></i>Categories
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        </div>
+                    </li>-->
+                    
+                    
+                    
+                    
+                    <?php if($this->user_id){ ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/cart/checkout"><i class="fas fa-money-check-alt mr-2"></i>Checkout</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/cart/cart">
+                                <i class="fas fa-shopping-cart"></i> 
+                                <span id="cart-item" class="badge badge-danger"></span>
+                            </a>
+                        </li>
+                    <?php } ?>
+                    <?php if(!$this->user_id){ ?>
+                    <li class="nav-item">
+                        <button type="button" class="btn btn-dark ml-auto" id="myBtn">Login</button>
+                    </li>
+                    <?php }else{ ?>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <?= Zend_Registry::get('name')?>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="/cart/logout">Log Out</a>
+                        </div>
+                    </li>
+                    <?php } ?>
+                </ul>
+            </div>
+        </nav>
+        
+        <!-- Navbar end -->
+        <?php if(in_array($_SERVER['REQUEST_URI'], ["/","/cart/index"])){ ?>
+            <video class="w-100 h-100 video-background" autoplay muted playsinline>
+              <source src="/images/Main.mp4" type="video/mp4" type="" />
+            </video>
+        <?php } ?>
+        <!-- Displaying Products Start -->
+        <div class="container w-100">
+            <?php echo $this->layout()->content; ?>
+        </div>
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header pull-left" style="padding:30px 20px;">
+                    <h4><span class="glyphicon glyphicon-lock"></span> Login</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body" style="padding:40px 50px;">
+                    <form role="form" id="login_form" action="" method="post" >
+                        <div class="form-group">
+                            <label for="usrname"><span class="glyphicon glyphicon-user"></span> Username</label>
+                            <input type="text" name="username" class="form-control" required="required"  id="usrname" placeholder="Enter username">
+                        </div>
+                        <div class="form-group">
+                            <label for="psw"><span class="glyphicon glyphicon-eye-open"></span> Password</label>
+                            <input type="password" name="password" class="form-control" id="psw" required="required" placeholder="Enter password">
+                        </div>
+<!--                        <div class="checkbox">
+                            <label><input type="checkbox" value="" checked>Remember me</label>
+                        </div>-->
+                        <button type="submit" class="btn btn-success btn-block" id="tag-form-submit"><span class="glyphicon glyphicon-off"></span> Login</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger btn-default pull-left" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
+<!--                    <p>Not a member? <a href="#">Sign Up</a></p>
+                    <p>Forgot <a href="#">Password?</a></p>-->
+                </div>
+            </div>
+
+        </div>
+    </div> 
+    <script>
+        $(document).ready(function () {
+            
+$('.dropdown-submenu').hover(function () {
+ $(this).find('.dropdown-menu').addClass('show');
+}, function () {
+ $(this).find('.dropdown-menu').removeClass('show');
+});
+
+// Fix dropdown submenu positioning
+$('.dropdown-submenu .dropdown-menu').hover(function () {
+ $(this).parent().addClass('show');
+}, function () {
+ $(this).parent().removeClass('show');
+});
+            
+            $('.button-left').click(function () {
+                $('.sidebar').toggleClass('fliph');
+            });
+            
+            $("#myBtn").click(function () {
+                $("#myModal").modal();
+            });
+            
+            $('#tag-form-submit').on('click', function(e) {
+                var str = $("form").serialize();
+                e.preventDefault();
+                $.ajax({
+                    type: "POST",
+                    url: "/cart/login",
+                    data: str,
+                    success: function(response) {
+                       var data = JSON.parse(response);
+                       if(data['success']){
+                           location.reload(true);
+                       }else{
+                           $("form#login_form").before('<div class="alert alert-danger" role="alert">Error:'+data['msg']+'</div>');
+                       }
+                    },
+                    error: function() {
+                        alert('Error');
+                    }
+                });
+                return false;
+            });
+      load_cart_item_number();
+
+        function load_cart_item_number() {
+            $.ajax({
+                url: '/cart/action',
+                method: 'get',
+                data: {
+                    cartItem: "cart_item"
+                },
+                success: function (response) {
+                    $("#cart-item").html(response);
+                }
+            });
+        }
+        });
+    </script>
+        
+        
+        
+</body>
+</html>

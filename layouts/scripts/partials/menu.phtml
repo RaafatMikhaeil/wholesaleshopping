@@ -1,0 +1,56 @@
+<?php
+if (Zend_Registry::isRegistered("nav_bypass") && Zend_Registry::get("nav_bypass") == true) {
+    return;
+}
+try {
+    //Check permission Groups and access
+    $permission_group_ids = Zend_Registry::get("permission_group_ids");
+    $user_id = Zend_Registry::get("user_id");
+    $navigation = Zend_Registry::get("admin_nav");
+    $menu = Zend_Registry::get("menu");
+
+    function buildMenu($array, $level = 0) {
+        foreach ($array as $menu) {
+            $tree .= '<li>
+                <a href="#">' . $menu['data']['page_group_name'];
+            if (count($menu['pages']) > 0 || isset($menu['children'])) {
+                if ($level == 0) {
+                    $tree .= '<span class="drop-icon">▾</span>';
+                    $class = "first";
+                }else{
+                    $tree .= '<span class="drop-icon">▸</span>';
+                    $class = "";
+                }
+            }
+            $tree .= '<label title="Toggle Drop-down" class="drop-icon" for="sm1">▾</label>
+                </a>
+                <input type="checkbox" id="sm' . $level . '">
+                <ul class="sub-menu '.$class.'">';
+            if (isset($menu['children'])) {
+                $tree .= buildMenu($menu['children'], $level + 1);
+            }
+            foreach ($menu['pages'] as $page) {
+                $path = Zend_Registry::get("protocol") . $page['host'] . $page['path'];
+                $tree .= '<li><a href="' . $path . '">' . $page['page_name'] . '</a></li> ';
+            }
+            $tree .= "</ul>
+               </li>";
+        }
+        return $tree;
+    }
+
+    $menu_tree = buildMenu($menu);
+    ?>
+    <nav id="menu">
+        <label for="tm" id="toggle-menu">Navigation <span class="drop-icon">▾</span></label>
+        <input type="checkbox" id="tm">
+        <ul class="main-menu clearfix">
+            <?php echo $menu_tree; ?>
+        </ul>
+    </nav>
+    <?php
+} catch (Exception $e) {
+    //echo $e->getMessage(); die();
+} 
+
+

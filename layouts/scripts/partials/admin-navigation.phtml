@@ -1,0 +1,101 @@
+<?php
+if( Zend_Registry::isRegistered("nav_bypass") && Zend_Registry::get("nav_bypass") == true ) {
+    return;
+}
+try {
+    //Check access and permission groups
+    $permission_group_ids = Zend_Registry::get("permission_group_ids");
+    $user_id    =   Zend_Registry::get("user_id");
+    $navigation =   Zend_Registry::get("admin_nav");
+    
+    //Get Favorites
+    $fav_paths  =   [];
+    //$favorites  =   $this->favorites;
+    //$fav_paths  =   array_column($favorites, 'path');
+    
+    //Filter URL
+    $protocol   =   Zend_Registry::get("protocol");
+    $request_uri=   filter_input(INPUT_SERVER, 'REQUEST_URI');
+    $pmapper    =   New Atlas_Model_PagesMapper();
+    $uri        =   $pmapper->filterPartialUri($request_uri);   
+if ($uri != $request_uri){
+    $uri = "/dashboard";
+}?>
+<script type="text/javascript">
+$(document).ready(function(){
+    $("#nav li").hover(
+    function(){
+        $(this).children('ul').hide();
+        $(this).children('ul').show();
+    },
+    function () {
+        $('ul', this).hide();
+    });
+});
+</script>
+<div class="admin-nav_bar"> 
+    <ul id="nav">
+    <?php 
+    if( is_array($navigation) && count($navigation) > 0 ) {
+        $group_count = count($navigation); 
+        foreach( $navigation as $group_name => $group ) {
+            if( is_array($group['pages']) && count($group['pages']) > 0 ) { ?>
+            <li id="apgi_<?php echo $group['page_group_id']; ?>"    style="z-index: <?php echo $group_count; ?>;">
+                <a  id="apgl_<?php echo $group['page_group_id']; ?>"    href="#">
+                    <?php echo $group['page_group_name']; ?>
+                </a>
+                <?php if( is_array($group['pages']) && count($group['pages']) > 0 ) { ?>
+                    <ul id="api_<?php echo $group['page_group_id']; ?>" style="max-height: 500px; overflow: auto;">
+                        <?php foreach( $group['pages'] as $page ) { ?>
+                            <li><?php $path=$protocol.$page['host'].$page['path'];   ?>
+                                <a href="<?php echo $path; ?>">
+                                    <?php echo $page['page_name']; ?>
+                                </a>
+                            </li>
+                        <?php } ?>
+                    </ul>
+                <?php } ?>
+            </li>
+            <?php --$group_count; ?>
+            <?php } ?>
+        <?php } ?>
+    <?php } ?>
+    </ul>
+
+    <div class="clear"></div>
+
+<!--    <div class="favorites">
+        <table >
+            <thead>
+                <tr>
+                    <td class="left">Favorites</td>
+                    <?php if ($uri != '/dashboard' && !in_array($uri, $fav_paths)) { ?> 
+                        <td class="right add_to_fav" data-uri="<?php echo $uri ?>">
+                            <img src="/images/icons/famfam/award_star_add.png" title="Add To Favorites" />
+                        </td>
+                    <?php } ?>
+                </tr>
+            </thead>
+            <tbody class="user_favs">
+                <?php if (is_array($favorites) && count($favorites)>0) { ?>                
+                <tr>
+                    <?php $i=0; foreach($favorites as $row) {
+                        if ($i == 5) { ?>
+                            </tr>
+                            <tr>
+                        <?php  
+                        }$i++; ?>
+                        <td id="fav_id_<?php echo $row['id']; ?>">
+                            <a class="first" href="<?php echo $protocol.$row['host']; ?><?php echo $row['path']; ?>"><?php echo $row['page_name']; ?></a>
+                            <a class="last delete_fav" data-favid="<?php echo $row['id']; ?>" data-uri="<?php echo $row['path']; ?>">X</a>
+                        </td>
+                    <?php } ?>
+                </tr>       
+                <?php } ?>
+            </tbody>
+            
+        </table>
+    </div>-->
+</div>
+
+<?php } catch( Exception $e ) {} 

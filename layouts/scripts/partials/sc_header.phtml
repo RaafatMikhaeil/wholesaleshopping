@@ -1,0 +1,18 @@
+<?php 
+$valid    =   true;
+$user_id              = Zend_Registry::get('user_id');
+?>
+<div class="logo_sphere">
+    <a href="/smartcart/index"><img src="/images/atlas_sphere.png" /></a>
+</div><!-- end logo_sphere div -->
+
+<div class="logo_text">
+    <img src="/images/atlas_logo.png" />
+</div><!-- end logo_text div -->
+<?php if( $valid && $user_id != "" ) { ?>
+    <div class="secondary_nav_top">
+        Welcome <?php echo Zend_Registry::get('name'); ?>
+        &nbsp;&nbsp;|&nbsp;&nbsp;
+        <a href="/smartcart/usersc/logout/1">Log Out</a>
+    </div><!-- end secondary_nav_top div -->
+<?php } ?>
